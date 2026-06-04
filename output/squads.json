@@ -14542,7 +14542,8 @@
       "wc": 1,
       "photo": "https://media.api-sports.io/football/players/154.png",
       "number": 10,
-      "d": "L. Messi forma parte del plantel de Argentina. Foto y datos base obtenidos desde API-Sports."
+      "d": "L. Messi forma parte del plantel de Argentina. Foto y datos base obtenidos desde API-Sports.",
+      "stickerPhoto": "assets/stickers/page-073-04.jpg"
     },
     {
       "id": "Argentina-323935",
