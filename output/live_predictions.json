@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-06-03T00:00:00.000Z",
+  "matches_played": 0,
+  "matches_remaining": 104,
+  "podium_current": {
+    "champion": "Germany",
+    "runner_up": "France",
+    "third": "Spain"
+  },
+  "ranking": {
+    "Germany":     { "p_champion": 11.0, "p_final": 19.3, "p_semifinal": 29.6, "p_change_vs_original": 0 },
+    "France":      { "p_champion": 10.6, "p_final": 16.9, "p_semifinal": 26.8, "p_change_vs_original": 0 },
+    "Spain":       { "p_champion":  8.4, "p_final": 14.0, "p_semifinal": 24.0, "p_change_vs_original": 0 },
+    "Brazil":      { "p_champion":  7.7, "p_final": 14.4, "p_semifinal": 23.3, "p_change_vs_original": 0 },
+    "England":     { "p_champion":  6.2, "p_final": 10.5, "p_semifinal": 18.8, "p_change_vs_original": 0 },
+    "Argentina":   { "p_champion":  5.7, "p_final":  9.7, "p_semifinal": 18.1, "p_change_vs_original": 0 },
+    "Belgium":     { "p_champion":  5.4, "p_final": 10.1, "p_semifinal": 18.9, "p_change_vs_original": 0 },
+    "Portugal":    { "p_champion":  5.2, "p_final":  9.3, "p_semifinal": 17.4, "p_change_vs_original": 0 },
+    "Netherlands": { "p_champion":  3.9, "p_final":  7.7, "p_semifinal": 14.3, "p_change_vs_original": 0 },
+    "Colombia":    { "p_champion":  3.1, "p_final":  6.4, "p_semifinal": 13.1, "p_change_vs_original": 0 }
+  },
+  "next_match": {
+    "team1": "Mexico",
+    "team2": "South Africa",
+    "pred_score": "2-0",
+    "date": "Jue 11 Jun",
+    "time": "16:00",
+    "group": "A",
+    "p1": 64,
+    "status": "scheduled"
+  },
+  "biggest_movers": []
+}
