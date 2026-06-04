@@ -1,0 +1,110 @@
+name: 🔄 Update WC2026 Predictions
+
+on:
+  schedule:
+    # Corre cada 45 minutos entre las 13:00 y 23:00 UTC
+    # = 10:00 a 20:00 hora Argentina (UTC-3)
+    # Activo del 11 Jun al 19 Jul 2026
+    - cron: '0,45 13-23 * 6 *'    # Todo junio
+    - cron: '0,45 13-23 1-19 7 *' # 1 al 19 de julio
+
+  # Trigger manual desde GitHub → Actions → Run workflow
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Modo de ejecución'
+        required: false
+        default: 'live'
+        type: choice
+        options:
+          - live
+          - demo
+
+jobs:
+  update-predictions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # necesario para hacer push del JSON actualizado
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🐍 Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: 🏆 Run live updater
+        env:
+          FD_API_KEY: ${{ secrets.FD_API_KEY }}
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+          N_SIMULATIONS: 10000
+          ENRICH_EVENTS: 'true'
+        run: |
+          MODE="${{ github.event.inputs.mode || 'live' }}"
+          if [ "$MODE" = "demo" ]; then
+            python src/live_updater.py --demo
+          else
+            python src/live_updater.py
+          fi
+
+      - name: 📊 Check output
+        run: |
+          echo "=== live_predictions.json ==="
+          cat output/live_predictions.json | python3 -c "
+          import json, sys
+          d = json.load(sys.stdin)
+          print(f'Generado: {d[\"generated_at\"]}')
+          print(f'Partidos jugados: {d[\"matches_played\"]}')
+          print(f'Campeón actual: {d[\"podium_current\"][\"champion\"]}')
+          r = sorted(d[\"ranking\"].items(), key=lambda x: x[1][\"p_champion\"], reverse=True)
+          print('Top 5:')
+          for team, stats in r[:5]:
+              print(f'  {team}: {stats[\"p_champion\"]}%')
+          "
+
+      - name: 💾 Commit & push updated predictions
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "WC2026 Bot"
+
+          git add output/live_predictions.json
+
+          # Solo hace commit si hay cambios reales
+          if git diff --staged --quiet; then
+            echo "Sin cambios nuevos — nada para commitear."
+          else
+            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+            PLAYED=$(cat output/live_predictions.json | python3 -c "import json,sys; print(json.load(sys.stdin)['matches_played'])")
+            CHAMP=$(cat output/live_predictions.json | python3 -c "import json,sys; print(json.load(sys.stdin)['podium_current']['champion'])")
+            git commit -m "🔄 Update predictions — ${TIMESTAMP} | ${PLAYED} jugados | Favorito: ${CHAMP}"
+            git push
+            echo "✅ Predictions actualizadas y pusheadas."
+          fi
+
+      - name: 📬 Summary
+        if: always()
+        run: |
+          echo "### WC2026 Predictor Update" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f output/live_predictions.json ]; then
+            python3 -c "
+          import json
+          with open('output/live_predictions.json') as f:
+              d = json.load(f)
+          print(f'| Campo | Valor |')
+          print(f'|---|---|')
+          print(f'| Generado | {d[\"generated_at\"]} |')
+          print(f'| Partidos jugados | {d[\"matches_played\"]} |')
+          print(f'| Campeón predicho | {d[\"podium_current\"][\"champion\"]} |')
+          r = sorted(d[\"ranking\"].items(), key=lambda x: x[1][\"p_champion\"], reverse=True)
+          print(f'| Top 3 | {r[0][0]} {r[0][1][\"p_champion\"]}% / {r[1][0]} {r[1][1][\"p_champion\"]}% / {r[2][0]} {r[2][1][\"p_champion\"]}% |')
+          " >> $GITHUB_STEP_SUMMARY
+          fi

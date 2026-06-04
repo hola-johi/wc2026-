@@ -1,0 +1,29 @@
+# ── Credenciales (NUNCA al repo) ──
+.env
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.Python
+dist/
+build/
+
+# ── Archivos intermedios del modelo (grandes, regenerables) ──
+data/live/updated_vectors.json
+data/live/results.json
+
+# ── OS ──
+.DS_Store
+.DS_Store?
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# ── IDEs ──
+.vscode/
+.idea/
+*.swp
+*.swo
