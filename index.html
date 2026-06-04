@@ -35,8 +35,7 @@
     .tab-main.on { color:#fff; border-bottom-color:var(--cel); }
 
     /* ROUND TABS */
-    .tabs-round { background:var(--card); border-bottom:1px solid var(--bdr); display:flex; overflow-x:auto; scrollbar-width:none; position:sticky; top:103px; z-index:80; box-shadow:0 2px 8px rgba(26,58,143,.07); }
-    .tabs-round::-webkit-scrollbar { display:none; }
+    .tabs-round { background:var(--card); border-bottom:1px solid var(--bdr); display:flex; overflow-x:auto; scrollbar-width:thin; scrollbar-color:var(--bdr) transparent; position:sticky; top:99px; z-index:80; box-shadow:0 2px 8px rgba(26,58,143,.07); }
     .tab-round { flex:0 0 auto; padding:10px 13px; background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; font-size:11px; font-weight:700; color:var(--trt); white-space:nowrap; transition:all .15s; font-family:'Inter',sans-serif; }
     .tab-round.on { color:var(--nav); border-bottom-color:var(--nav); }
 
@@ -290,6 +289,17 @@
   <button class="tab-main"     onclick="switchMain('jugadores',this)">Jugadores</button>
 </div>
 
+<div class="tabs-round" id="round-tabs" style="display:none">
+  <button class="tab-round on"  onclick="switchRound('j1',this)">JORNADA 1</button>
+  <button class="tab-round"     onclick="switchRound('j2',this)">JORNADA 2</button>
+  <button class="tab-round"     onclick="switchRound('j3',this)">JORNADA 3</button>
+  <button class="tab-round"     onclick="switchRound('r32',this)">ROUND 32</button>
+  <button class="tab-round"     onclick="switchRound('r16',this)">ROUND 16</button>
+  <button class="tab-round"     onclick="switchRound('qf',this)">CUARTOS</button>
+  <button class="tab-round"     onclick="switchRound('sf',this)">SEMIS</button>
+  <button class="tab-round"     onclick="switchRound('final',this)">FINAL</button>
+</div>
+
 <main>
   <div id="loading">Cargando<span class="d">.</span><span class="d">.</span><span class="d">.</span></div>
 
@@ -298,16 +308,6 @@
 
   <!-- PARTIDOS -->
   <div id="sec-partidos" class="sec">
-    <div class="tabs-round" id="round-tabs">
-      <button class="tab-round on"  onclick="switchRound('j1',this)">JORNADA 1</button>
-      <button class="tab-round"     onclick="switchRound('j2',this)">JORNADA 2</button>
-      <button class="tab-round"     onclick="switchRound('j3',this)">JORNADA 3</button>
-      <button class="tab-round"     onclick="switchRound('r32',this)">ROUND 32</button>
-      <button class="tab-round"     onclick="switchRound('r16',this)">ROUND 16</button>
-      <button class="tab-round"     onclick="switchRound('qf',this)">CUARTOS</button>
-      <button class="tab-round"     onclick="switchRound('sf',this)">SEMIS</button>
-      <button class="tab-round"     onclick="switchRound('final',this)">FINAL</button>
-    </div>
     <div id="partidos-content" style="padding-top:12px"></div>
   </div>
 
@@ -754,7 +754,13 @@ function renderResumen(data) {
 }
 
 // ─── NAV ────────────────────────────────────────────────────
-function switchMain(id,btn){document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));document.querySelectorAll(".tab-main").forEach(t=>t.classList.remove("on"));document.getElementById("sec-"+id).classList.add("on");btn.classList.add("on");}
+function switchMain(id,btn){
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("on"));
+  document.querySelectorAll(".tab-main").forEach(t=>t.classList.remove("on"));
+  document.getElementById("sec-"+id).classList.add("on");
+  btn.classList.add("on");
+  document.getElementById("round-tabs").style.display = id==="partidos" ? "flex" : "none";
+}
 function switchRound(id,btn){document.querySelectorAll(".tab-round").forEach(t=>t.classList.remove("on"));btn.classList.add("on");renderRound(id);}
 
 // ─── INIT ────────────────────────────────────────────────────
