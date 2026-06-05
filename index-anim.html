@@ -26,9 +26,10 @@
     /* ── Contenedor fijo para que nada se mueva ── */
     .stage {
       position: relative;
-      /* tamaño fijo basado en la imagen de letras (ratio 1296:2000 ≈ 0.648) */
       width:  min(75vw, 75vh * 0.648, 300px);
       height: min(75vw / 0.648, 75vh, 463px);
+      transform: translateZ(0);
+      will-change: transform;
     }
 
     /* ── Letras "2 6" — fondo del stage ── */
@@ -76,13 +77,15 @@
     }
 
     /* ── Zoom-in final de toda la escena ── */
+    .scene {
+      will-change: transform, opacity;
+    }
     .scene.zoom-in {
-      animation: sceneZoom 0.95s cubic-bezier(0.4,0,0.2,1) forwards;
+      animation: sceneZoom 1.1s cubic-bezier(0.25,0.1,0.25,1) forwards;
     }
     @keyframes sceneZoom {
       0%   { transform: scale(1);    opacity: 1; }
-      65%  { transform: scale(1.2);  opacity: 1; }
-      100% { transform: scale(1.45); opacity: 0; }
+      100% { transform: scale(1.5);  opacity: 0; }
     }
 
     /* ── Fade-to-black ── */
@@ -93,7 +96,7 @@
       opacity: 0;
       pointer-events: none;
       z-index: 99;
-      animation: overlayIn 0.5s ease 3.6s forwards;
+      animation: overlayIn 0.4s ease 3.5s forwards;
     }
     @keyframes overlayIn { to { opacity: 1; } }
 
