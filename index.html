@@ -291,38 +291,45 @@
     ══════════════════════════════════════════ */
     #intro {
       position: fixed;
-      inset: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: #000;
       z-index: 1000;
+      display: -webkit-flex;
       display: flex;
+      -webkit-align-items: center;
       align-items: center;
+      -webkit-justify-content: center;
       justify-content: center;
-      will-change: transform, opacity;
-    }
-    #intro.hide {
-      animation: introOut 0.5s ease forwards;
-    }
-    @keyframes introOut {
-      to { opacity: 0; pointer-events: none; }
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     .intro-stage {
       position: relative;
-      width:  min(72vw, 72vh * 0.648, 290px);
-      height: min(72vw / 0.648, 72vh, 448px);
+      /* sin min() con aritmética — compatible con todos los móviles */
+      width: 72vw;
+      max-width: 290px;
+      /* ratio letras.png: 1296/2000 = 0.648 → height = width / 0.648 */
+      height: calc(72vw / 0.648);
+      max-height: min(448px, 72vh);
+      -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      will-change: transform;
     }
 
     .intro-letras {
       position: absolute;
-      inset: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: -webkit-flex;
       display: flex;
+      -webkit-align-items: center;
       align-items: center;
+      -webkit-justify-content: center;
       justify-content: center;
       opacity: 0;
+      -webkit-transform: scale(0.9);
       transform: scale(0.9);
-      animation: letrasIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+      -webkit-animation: letrasIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s both;
+      animation: letrasIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s both;
       z-index: 1;
     }
     .intro-letras img { width: 100%; height: 100%; object-fit: contain; display: block; }
@@ -330,25 +337,40 @@
     .intro-copa {
       position: absolute;
       left: 50%; top: 44%;
+      -webkit-transform: translate(-50%, -50%) scale(6);
       transform: translate(-50%, -50%) scale(6);
       width: 62%;
       z-index: 2;
       opacity: 0;
-      animation: copaZoom 1.1s cubic-bezier(0.16,1,0.3,1) 1.1s forwards;
+      -webkit-animation: copaZoom 1.1s cubic-bezier(0.16,1,0.3,1) 1.1s both;
+      animation: copaZoom 1.1s cubic-bezier(0.16,1,0.3,1) 1.1s both;
     }
     .intro-copa img { width: 100%; display: block; }
 
     #intro.zoom-in {
+      -webkit-animation: sceneZoom 1.1s cubic-bezier(0.25,0.1,0.25,1) forwards;
       animation: sceneZoom 1.1s cubic-bezier(0.25,0.1,0.25,1) forwards;
     }
 
+    @-webkit-keyframes letrasIn {
+      to { opacity: 1; -webkit-transform: scale(1); transform: scale(1); }
+    }
     @keyframes letrasIn {
       to { opacity: 1; transform: scale(1); }
+    }
+    @-webkit-keyframes copaZoom {
+      0%  { opacity: 0; -webkit-transform: translate(-50%,-50%) scale(6); transform: translate(-50%,-50%) scale(6); }
+      12% { opacity: 1; }
+      100%{ opacity: 1; -webkit-transform: translate(-50%,-50%) scale(1); transform: translate(-50%,-50%) scale(1); }
     }
     @keyframes copaZoom {
       0%  { opacity: 0; transform: translate(-50%, -50%) scale(6); }
       12% { opacity: 1; }
       100%{ opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @-webkit-keyframes sceneZoom {
+      0%   { -webkit-transform: scale(1);   opacity: 1; }
+      100% { -webkit-transform: scale(1.5); opacity: 0; }
     }
     @keyframes sceneZoom {
       0%   { transform: scale(1);   opacity: 1; }
@@ -880,21 +902,45 @@ setInterval(init,5*60*1000);
 <div id="intro">
   <div class="intro-stage">
     <div class="intro-letras">
-      <img src="/wc2026-/assets/anim/letras.png" alt="2026"/>
+      <img id="img-letras" src="/wc2026-/assets/anim/letras.png" alt="2026"/>
     </div>
     <div class="intro-copa">
-      <img src="/wc2026-/assets/anim/copa.png" alt="Copa"/>
+      <img id="img-copa" src="/wc2026-/assets/anim/copa.png" alt="Copa"/>
     </div>
   </div>
 </div>
 
 <script>
   (function() {
-    const intro = document.getElementById('intro');
-    setTimeout(() => intro.classList.add('zoom-in'), 2600);
-    setTimeout(() => {
-      intro.style.display = 'none';
-    }, 3700);
+    var intro  = document.getElementById('intro');
+    var imgL   = document.getElementById('img-letras');
+    var imgC   = document.getElementById('img-copa');
+    var loaded = 0;
+
+    function startIntro() {
+      /* reinicia animaciones forzando reflow */
+      var letras = intro.querySelector('.intro-letras');
+      var copa   = intro.querySelector('.intro-copa');
+      letras.style.animation = 'none';
+      copa.style.animation   = 'none';
+      void letras.offsetWidth;
+      letras.style.animation = '';
+      copa.style.animation   = '';
+
+      setTimeout(function(){ intro.classList.add('zoom-in'); }, 2600);
+      setTimeout(function(){ intro.style.display = 'none';   }, 3700);
+    }
+
+    function onLoad() {
+      loaded++;
+      if (loaded >= 2) startIntro();
+    }
+
+    if (imgL.complete) onLoad(); else imgL.addEventListener('load', onLoad);
+    if (imgC.complete) onLoad(); else imgC.addEventListener('load', onLoad);
+
+    /* fallback: arrancar igual si tarda más de 1s */
+    setTimeout(startIntro, 1000);
   })();
 </script>
 
