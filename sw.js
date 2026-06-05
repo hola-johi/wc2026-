@@ -1,12 +1,13 @@
-const CACHE_NAME = 'predicho-v1';
+const CACHE_NAME = 'predicho-v4';
 const DATA_URL   = 'https://raw.githubusercontent.com/hola-johi/wc2026-/main/output/live_predictions.json';
 
 const STATIC_ASSETS = [
   '/wc2026-/',
   '/wc2026-/index.html',
   '/wc2026-/manifest.json',
-  '/wc2026-/icon-192.png',
-  '/wc2026-/icon-512.png',
+  '/wc2026-/assets/icono/icon-home-180.png',
+  '/wc2026-/assets/icono/icon-home-192.png',
+  '/wc2026-/assets/icono/icon-home-512.png',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap',
 ];
 
