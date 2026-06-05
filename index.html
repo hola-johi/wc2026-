@@ -7,6 +7,21 @@
   <title>🐐 Predicho · WC2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/wc2026-/manifest.json"/>
+
+  <!-- iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Predicho"/>
+  <link rel="apple-touch-icon" href="/wc2026-/icon-180.png"/>
+  <link rel="apple-touch-icon" sizes="192x192" href="/wc2026-/icon-192.png"/>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/wc2026-/icon-192.png"/>
+  <link rel="shortcut icon" href="/wc2026-/icon-192.png"/>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -35,7 +50,8 @@
     .tab-main.on { color:#fff; border-bottom-color:var(--cel); }
 
     /* ROUND TABS */
-    .tabs-round { background:var(--card); border-bottom:1px solid var(--bdr); display:flex; overflow-x:auto; scrollbar-width:thin; scrollbar-color:var(--bdr) transparent; position:sticky; top:99px; z-index:80; box-shadow:0 2px 8px rgba(26,58,143,.07); }
+    .tabs-round { background:var(--card); border-bottom:1px solid var(--bdr); display:flex; overflow-x:auto; scrollbar-width:none; position:sticky; top:99px; z-index:80; box-shadow:0 2px 8px rgba(26,58,143,.07); }
+    .tabs-round::-webkit-scrollbar { display:none; }
     .tab-round { flex:0 0 auto; padding:10px 13px; background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; font-size:11px; font-weight:700; color:var(--trt); white-space:nowrap; transition:all .15s; font-family:'Inter',sans-serif; }
     .tab-round.on { color:var(--nav); border-bottom-color:var(--nav); }
 
@@ -789,6 +805,15 @@ async function init(){
 }
 init();
 setInterval(init,5*60*1000);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/wc2026-/sw.js')
+        .then(r => console.log('SW registrado:', r.scope))
+        .catch(e => console.log('SW error:', e));
+    });
+  }
 </script>
 </body>
 </html>
