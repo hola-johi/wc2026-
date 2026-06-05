@@ -893,9 +893,7 @@ setInterval(init,5*60*1000);
     const intro = document.getElementById('intro');
     setTimeout(() => intro.classList.add('zoom-in'), 2600);
     setTimeout(() => {
-      intro.classList.remove('zoom-in');
-      intro.classList.add('hide');
-      setTimeout(() => intro.style.display = 'none', 500);
+      intro.style.display = 'none';
     }, 3700);
   })();
 </script>
