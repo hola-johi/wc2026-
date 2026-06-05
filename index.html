@@ -912,35 +912,26 @@ setInterval(init,5*60*1000);
 
 <script>
   (function() {
-    var intro  = document.getElementById('intro');
-    var imgL   = document.getElementById('img-letras');
-    var imgC   = document.getElementById('img-copa');
-    var loaded = 0;
+    var intro   = document.getElementById('intro');
+    var imgL    = document.getElementById('img-letras');
+    var imgC    = document.getElementById('img-copa');
+    var started = false;
 
     function startIntro() {
-      /* reinicia animaciones forzando reflow */
-      var letras = intro.querySelector('.intro-letras');
-      var copa   = intro.querySelector('.intro-copa');
-      letras.style.animation = 'none';
-      copa.style.animation   = 'none';
-      void letras.offsetWidth;
-      letras.style.animation = '';
-      copa.style.animation   = '';
-
+      if (started) return;
+      started = true;
       setTimeout(function(){ intro.classList.add('zoom-in'); }, 2600);
-      setTimeout(function(){ intro.style.display = 'none';   }, 3700);
+      setTimeout(function(){ intro.style.display = 'none';  }, 3700);
     }
 
-    function onLoad() {
-      loaded++;
-      if (loaded >= 2) startIntro();
-    }
+    var loaded = 0;
+    function onLoad() { if (++loaded >= 2) startIntro(); }
 
     if (imgL.complete) onLoad(); else imgL.addEventListener('load', onLoad);
     if (imgC.complete) onLoad(); else imgC.addEventListener('load', onLoad);
 
-    /* fallback: arrancar igual si tarda más de 1s */
-    setTimeout(startIntro, 1000);
+    /* fallback por si las imágenes ya estaban cacheadas o tardan */
+    setTimeout(startIntro, 800);
   })();
 </script>
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'predicho-v4';
+const CACHE_NAME = 'predicho-v5';
 const DATA_URL   = 'https://raw.githubusercontent.com/hola-johi/wc2026-/main/output/live_predictions.json';
 
 const STATIC_ASSETS = [
