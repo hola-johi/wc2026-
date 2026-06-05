@@ -7,75 +7,85 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
+    html, body {
+      width: 100%; height: 100%;
       background: #000;
-      width: 100vw;
-      height: 100vh;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: sans-serif;
     }
 
-    /* ── Escena principal ── */
+    /* ── Escena: ocupa toda la pantalla, todo centrado ── */
     .scene {
-      position: relative;
-      width: min(420px, 100vw);
-      height: 100vh;
+      position: fixed;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      transform-origin: center center;
     }
 
-    /* ── Letras "2 6" ── */
+    /* ── Contenedor fijo para que nada se mueva ── */
+    .stage {
+      position: relative;
+      /* tamaño fijo basado en la imagen de letras (ratio 1296:2000 ≈ 0.648) */
+      width:  min(75vw, 75vh * 0.648, 300px);
+      height: min(75vw / 0.648, 75vh, 463px);
+    }
+
+    /* ── Letras "2 6" — fondo del stage ── */
     .letras {
       position: absolute;
-      width: 85%;
-      max-width: 340px;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
-      transform: scale(0.88);
+      transform: scale(0.9);
       animation: letrasIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
       z-index: 1;
-      pointer-events: none;
     }
-    .letras img { width: 100%; display: block; }
+    .letras img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
 
     @keyframes letrasIn {
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* ── Copa ── */
+    /* ── Copa — centrada en el stage, alineada al hueco entre 2 y 6 ── */
     .copa {
       position: absolute;
-      width: 45%;
-      max-width: 170px;
+      /* centrada horizontal, desplazada un poco arriba del centro del stage
+         para quedar en el hueco entre las letras (ajustar top si hace falta) */
+      left: 50%;
+      top:  44%;
+      transform: translate(-50%, -50%) scale(6);
+      width: 62%;
       z-index: 2;
       opacity: 0;
-      /* empieza muy grande y centrada (efecto "viene de adelante") */
-      transform: scale(5) translateY(0px);
       animation: copaZoom 1.1s cubic-bezier(0.16,1,0.3,1) 1.1s forwards;
-      pointer-events: none;
     }
     .copa img { width: 100%; display: block; }
 
     @keyframes copaZoom {
-      0%   { opacity: 0; transform: scale(5)   translateY(4px); }
-      15%  { opacity: 1; }
-      100% { opacity: 1; transform: scale(1)   translateY(0px); }
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(6); }
+      12%  { opacity: 1; }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
-    /* ── Acercamiento final de toda la escena ── */
+    /* ── Zoom-in final de toda la escena ── */
     .scene.zoom-in {
-      animation: sceneZoom 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+      animation: sceneZoom 0.95s cubic-bezier(0.4,0,0.2,1) forwards;
     }
     @keyframes sceneZoom {
       0%   { transform: scale(1);    opacity: 1; }
-      70%  { transform: scale(1.18); opacity: 1; }
-      100% { transform: scale(1.4);  opacity: 0; }
+      65%  { transform: scale(1.2);  opacity: 1; }
+      100% { transform: scale(1.45); opacity: 0; }
     }
 
-    /* ── Overlay fade-to-black ── */
+    /* ── Fade-to-black ── */
     .overlay {
       position: fixed;
       inset: 0;
@@ -83,28 +93,26 @@
       opacity: 0;
       pointer-events: none;
       z-index: 99;
-      animation: overlayIn 0.5s ease 3.5s forwards;
+      animation: overlayIn 0.5s ease 3.6s forwards;
     }
-    @keyframes overlayIn {
-      to { opacity: 1; }
-    }
+    @keyframes overlayIn { to { opacity: 1; } }
 
-    /* ── Botón replay (para testear) ── */
+    /* ── Replay (test) ── */
     .replay {
       position: fixed;
-      bottom: 24px;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255,255,255,.1);
       color: #fff;
-      border: 1px solid rgba(255,255,255,.3);
+      border: 1px solid rgba(255,255,255,.25);
       padding: 10px 28px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       z-index: 200;
       font-family: monospace;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
   </style>
 </head>
@@ -113,27 +121,22 @@
 <div class="overlay"></div>
 
 <div class="scene" id="scene">
-  <div class="letras">
-    <img src="assets/anim/letras.png" alt="2026"/>
-  </div>
-  <div class="copa">
-    <img src="assets/anim/copa.png" alt="Copa"/>
+  <div class="stage">
+    <div class="letras">
+      <img src="assets/anim/letras.png" alt="2026"/>
+    </div>
+    <div class="copa">
+      <img src="assets/anim/copa.png" alt="Copa"/>
+    </div>
   </div>
 </div>
 
-<button class="replay" onclick="replay()">↺ REPLAY</button>
+<button class="replay" onclick="location.reload()">↺ REPLAY</button>
 
 <script>
-  const scene = document.getElementById('scene');
-
-  // Acercamiento final: se dispara cuando la copa ya llegó a su lugar
   setTimeout(() => {
-    scene.classList.add('zoom-in');
-  }, 2500);
-
-  function replay() {
-    location.reload();
-  }
+    document.getElementById('scene').classList.add('zoom-in');
+  }, 2600);
 </script>
 </body>
 </html>
