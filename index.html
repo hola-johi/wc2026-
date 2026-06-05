@@ -891,19 +891,11 @@ setInterval(init,5*60*1000);
 <script>
   (function() {
     const intro = document.getElementById('intro');
-    // Solo mostrar una vez por sesión
-    if (sessionStorage.getItem('introPlayed')) {
-      intro.style.display = 'none';
-      return;
-    }
-    // Zoom final a los 2.6s
     setTimeout(() => intro.classList.add('zoom-in'), 2600);
-    // Ocultar overlay al terminar
     setTimeout(() => {
       intro.classList.remove('zoom-in');
       intro.classList.add('hide');
       setTimeout(() => intro.style.display = 'none', 500);
-      sessionStorage.setItem('introPlayed', '1');
     }, 3700);
   })();
 </script>
