@@ -1,145 +1,685 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <title>Predicho — Intro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WC 2026 — Intro</title>
   <style>
+
+    /* ══════════════════════════════════════════════════════════════
+       BASE
+    ══════════════════════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       width: 100%; height: 100%;
-      background: #000;
+      background: #03071a;
       overflow: hidden;
+      font-family: sans-serif;
     }
 
-    /* ── Escena: ocupa toda la pantalla, todo centrado ── */
-    .scene {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform-origin: center center;
+    /* Particle canvas — always running */
+    #bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* Ambient background glow — visible from frame 0 */
+    .ambient {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 38% at 50% 54%, rgba(205,148,0,.09) 0%, transparent 62%),
+        radial-gradient(ellipse 80% 60% at 50% 46%, rgba(0,8,55,.28) 0%, transparent 70%);
+      animation: ambPulse 3s ease-in-out infinite alternate;
+    }
+    @keyframes ambPulse { from { opacity:.45; } to { opacity:1; } }
+
+    /* Center lens flare — subtle warm dot in the dark (0–0.5s atmosphere) */
+    .lens {
+      position: fixed; left:50%; top:46%;
+      width: 180px; height: 180px;
+      transform: translate(-50%,-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,200,60,.12) 0%, transparent 70%);
+      z-index: 2; pointer-events: none;
+      animation: lensBreath 2.2s ease-in-out infinite alternate;
+    }
+    @keyframes lensBreath { from{opacity:.5; transform:translate(-50%,-50%) scale(.9)} to{opacity:1; transform:translate(-50%,-50%) scale(1.1)} }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       SCENE — centers the stage on the viewport
+    ══════════════════════════════════════════════════════════════ */
+    #scene {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* ── Contenedor fijo para que nada se mueva ── */
+    /* ══════════════════════════════════════════════════════════════
+       STAGE — 500 × 660 reference, fluid
+    ══════════════════════════════════════════════════════════════ */
     .stage {
       position: relative;
-      width:  min(75vw, 75vh * 0.648, 300px);
-      height: min(75vw / 0.648, 75vh, 463px);
-      transform: translateZ(0);
-      will-change: transform;
+      width:  min(500px, 86vw, 86vh * 0.758);
+      height: min(660px, 86vh, 86vw * 1.32);
     }
 
-    /* ── Letras "2 6" — fondo del stage ── */
-    .letras {
+
+    /* ══════════════════════════════════════════════════════════════
+       SHARED SLOT
+       Trophy, all three pieces, and the assembled logo all sit at
+       exactly the same coordinates. This makes the pieces "fly
+       INTO" the trophy and the swap seamless.
+    ══════════════════════════════════════════════════════════════ */
+    .slot {
       position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 54%;
+      left: 23%;
+      top:  8%;
+    }
+    .slot img { width: 100%; display: block; }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       TROPHY  — copa_dorada.png
+       Step 1: rises from below at t=0.5s
+    ══════════════════════════════════════════════════════════════ */
+    .trophy {
+      z-index: 5;
       opacity: 0;
-      transform: scale(0.9);
-      animation: letrasIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
-      z-index: 1;
-    }
-    .letras img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
+      will-change: transform, opacity, filter;
+      filter:
+        drop-shadow(0 0 22px rgba(255,192,30,.95))
+        drop-shadow(0 0 55px rgba(255,125,0,.45));
+      animation:
+        trophyRise  .85s cubic-bezier(.16,1,.3,1) .5s both,
+        trophyGlow  1.5s ease-in-out            1.35s infinite alternate;
     }
 
-    @keyframes letrasIn {
-      to { opacity: 1; transform: scale(1); }
+    @keyframes trophyRise {
+      from { opacity:0; transform:translateY(140px) scale(.76); }
+      20%  { opacity:1; }
+      to   { opacity:1; transform:none; }
+    }
+    @keyframes trophyGlow {
+      from { filter: drop-shadow(0 0 22px rgba(255,192,30,.95)) drop-shadow(0 0 55px rgba(255,125,0,.45)); }
+      to   { filter: drop-shadow(0 0 35px rgba(255,210,48,1))   drop-shadow(0 0 78px rgba(255,155,0,.65)); }
     }
 
-    /* ── Copa — centrada en el stage, alineada al hueco entre 2 y 6 ── */
-    .copa {
+    /* ── JS: .gone fades element out instantly ── */
+    @keyframes fastOut { to { opacity:0; pointer-events:none; } }
+    .gone { animation: fastOut .18s ease forwards !important; }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       COLORED PIECES
+       All share .slot (same final destination = the trophy).
+       Hidden by default. JS adds .fly to launch each one.
+       Each has a directional glow/blur trail while moving.
+    ══════════════════════════════════════════════════════════════ */
+    .piece { z-index: 6; opacity: 0; }
+
+    /* ── Mexico (green) — enters from the LEFT ── */
+    .piece-mexico.fly {
+      animation: mxFly .60s cubic-bezier(.28,0,.52,1) both;
+    }
+    @keyframes mxFly {
+      0%   {
+        opacity:0;
+        transform: translate(-520px, 25px) rotate(-11deg);
+        filter: blur(6px) drop-shadow(-14px 0 18px rgba(15,175,65,.9));
+      }
+      16% { opacity:1; }
+      68% { filter: blur(2px) drop-shadow(-6px 0 10px rgba(15,175,65,.65)); }
+      100%{
+        opacity:1; transform:none;
+        filter: blur(0) drop-shadow(0 0 9px rgba(15,175,65,.45));
+      }
+    }
+
+    /* ── Unidos (blue) — enters from the BOTTOM ── */
+    .piece-unidos.fly {
+      animation: unFly .60s cubic-bezier(.28,0,.52,1) both;
+    }
+    @keyframes unFly {
+      0%   {
+        opacity:0;
+        transform: translate(15px, 420px) rotate(9deg);
+        filter: blur(6px) drop-shadow(0 -14px 18px rgba(20,65,195,.9));
+      }
+      16% { opacity:1; }
+      68% { filter: blur(2px) drop-shadow(0 -6px 10px rgba(20,65,195,.65)); }
+      100%{
+        opacity:1; transform:none;
+        filter: blur(0) drop-shadow(0 0 9px rgba(20,65,195,.45));
+      }
+    }
+
+    /* ── Canada (red) — enters from the RIGHT ── */
+    .piece-canada.fly {
+      animation: caFly .60s cubic-bezier(.28,0,.52,1) both;
+    }
+    @keyframes caFly {
+      0%   {
+        opacity:0;
+        transform: translate(520px, -20px) rotate(11deg);
+        filter: blur(6px) drop-shadow(14px 0 18px rgba(195,20,20,.9));
+      }
+      16% { opacity:1; }
+      68% { filter: blur(2px) drop-shadow(6px 0 10px rgba(195,20,20,.65)); }
+      100%{
+        opacity:1; transform:none;
+        filter: blur(0) drop-shadow(0 0 9px rgba(195,20,20,.45));
+      }
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       ASSEMBLED LOGO  — copa.png (no ball)
+       Step 2: replaces trophy+pieces after impact flash.
+       Hidden; JS adds .visible.
+    ══════════════════════════════════════════════════════════════ */
+    .logo-wrap {
+      z-index: 7; opacity: 0;
+      /* logo-wrap contains the logo image AND the glow burst overlay */
+    }
+
+    .logo-wrap.visible {
+      animation: logoIn .58s ease-out forwards !important;
+    }
+    @keyframes logoIn {
+      0%  {
+        opacity: 0;
+        filter: brightness(4.5) blur(5px) drop-shadow(0 0 45px rgba(255,255,255,.95));
+      }
+      26% {
+        opacity: 1;
+        filter: brightness(2.4) blur(0) drop-shadow(0 0 20px rgba(255,255,255,.5));
+      }
+      to  {
+        opacity: 1;
+        filter: brightness(1) drop-shadow(0 0 0 transparent);
+      }
+    }
+
+    /* Radial glow burst inside the logo-wrap (ball snap) */
+    .logo-glow {
+      position: absolute; inset: -12%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(255,210,42,.68) 0%, transparent 62%);
+      z-index: 1; opacity: 0; pointer-events: none;
+    }
+    .logo-glow.burst {
+      animation: glowBurst .78s ease-out forwards !important;
+    }
+    @keyframes glowBurst {
+      0%   { opacity:0;    transform:scale(.42); }
+      16%  { opacity:.92;  transform:scale(1.1); }
+      100% { opacity:0;    transform:scale(1.85); }
+    }
+
+    /* Brief brightness spike when ball snaps */
+    .logo-wrap.snap {
+      animation: logoBrightSnap .72s ease-out forwards !important;
+    }
+    @keyframes logoBrightSnap {
+      0%   { opacity:1; filter:brightness(1); }
+      12%  { filter:brightness(3) drop-shadow(0 0 24px rgba(255,218,52,.85)); }
+      100% { opacity:1; filter:brightness(1) drop-shadow(0 0 5px rgba(255,200,50,.2)); }
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       BALL  — pelota.png
+       Step 3: enters fast from top-right.
+       ★ Adjust top/left/width to match the ball hole in copa.png ★
+         Default: centred horizontally, same top as logo.
+    ══════════════════════════════════════════════════════════════ */
+    .ball-wrap {
       position: absolute;
-      /* centrada horizontal, desplazada un poco arriba del centro del stage
-         para quedar en el hueco entre las letras (ajustar top si hace falta) */
-      left: 50%;
-      top:  44%;
-      transform: translate(-50%, -50%) scale(6);
-      width: 62%;
-      z-index: 2;
+      width: 26%;
+      left: 37%;   /* (100 - 26) / 2 = 37 → centred */
+      top:  8%;    /* same top as logo; shift down if hole is lower */
+      z-index: 8;
       opacity: 0;
-      animation: copaZoom 1.1s cubic-bezier(0.16,1,0.3,1) 1.1s forwards;
     }
-    .copa img { width: 100%; display: block; }
+    .ball-wrap img { width: 100%; display: block; }
 
-    @keyframes copaZoom {
-      0%   { opacity: 0; transform: translate(-50%, -50%) scale(6); }
-      12%  { opacity: 1; }
-      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .ball-wrap.shoot {
+      animation: ballFly .46s cubic-bezier(.18,.82,.32,1) forwards !important;
     }
-
-    /* ── Zoom-in final de toda la escena ── */
-    .scene {
-      will-change: transform, opacity;
-    }
-    .scene.zoom-in {
-      animation: sceneZoom 1.1s cubic-bezier(0.25,0.1,0.25,1) forwards;
-    }
-    @keyframes sceneZoom {
-      0%   { transform: scale(1);    opacity: 1; }
-      100% { transform: scale(1.5);  opacity: 0; }
+    @keyframes ballFly {
+      0%   {
+        opacity:0;
+        transform: translate(310px,-310px) rotate(-18deg);
+        filter: blur(11px) drop-shadow(8px -8px 12px rgba(255,255,255,.25));
+      }
+      15%  { opacity:1; }
+      80%  { transform: translate(2px,2px) rotate(485deg); filter:blur(2px); }
+      100% {
+        opacity:1; transform:none;
+        filter:blur(0) drop-shadow(0 0 8px rgba(255,255,255,.32));
+      }
     }
 
-    /* ── Fade-to-black ── */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 99;
-      animation: overlayIn 0.4s ease 3.5s forwards;
-    }
-    @keyframes overlayIn { to { opacity: 1; } }
 
-    /* ── Replay (test) ── */
-    .replay {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
+    /* ══════════════════════════════════════════════════════════════
+       PULSE RINGS  — same anchor as ball, triggered on snap
+    ══════════════════════════════════════════════════════════════ */
+    .pulse-ring {
+      position: absolute;
+      width: 26%; aspect-ratio: 1;
+      left: 37%; top: 8%;
+      border-radius: 50%;
+      z-index: 9; opacity: 0; pointer-events: none;
+    }
+    .pulse-ring-1 { border: 3px solid rgba(255,214,50,.92); }
+    .pulse-ring-2 { border: 2px solid rgba(185,212,255,.68); }
+    .pulse-ring-3 { border: 1.5px solid rgba(255,255,255,.35); }
+
+    .pulse-ring.pop   { animation: ringOut .68s ease-out         forwards !important; }
+    .pulse-ring-2.pop { animation: ringOut .68s ease-out .15s    forwards !important; }
+    .pulse-ring-3.pop { animation: ringOut .68s ease-out .30s    forwards !important; }
+    @keyframes ringOut {
+      0%   { opacity:.90; transform:scale(1); }
+      100% { opacity:0;   transform:scale(3.8); }
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       TEXT  — texto.png
+       Step 4: fades in after ball snaps.
+    ══════════════════════════════════════════════════════════════ */
+    .texto {
+      position: absolute;
+      width: 88%; left: 6%; bottom: 3%;
+      z-index: 12; opacity: 0;
+    }
+    .texto img { width: 100%; display: block; }
+
+    .texto.show {
+      animation: textReveal .58s cubic-bezier(.16,1,.3,1) forwards !important;
+    }
+    @keyframes textReveal {
+      from { opacity:0; transform:translateY(22px) scale(.95); filter:brightness(1.6) blur(1.5px); }
+      to   { opacity:1; transform:none; filter:brightness(1) blur(0); }
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       FINAL LOGO  — logo.png (complete: ball + text already inside)
+       Fades in after impact to replace copa.png + pelota.png.
+    ══════════════════════════════════════════════════════════════ */
+    .final-logo {
+      z-index: 11; opacity: 0;
+      width: 92% !important;
+      left: 4% !important;
+      top: 6% !important;
+    }
+    .final-logo.show {
+      animation: logoFinalIn .5s ease-out forwards !important;
+    }
+    @keyframes logoFinalIn {
+      from { opacity:0; transform:scale(.88); filter:brightness(2.2) drop-shadow(0 0 24px rgba(255,255,255,.6)); }
+      55%  { opacity:1; filter:brightness(1.2); }
+      to   { opacity:1; transform:scale(1); filter:brightness(1) drop-shadow(0 0 0 transparent); }
+    }
+
+    /* ID-qualified selector beats .logo-wrap.visible !important (1,1,0 > 0,2,0) */
+    #logoWrap.hidden-out,
+    #ballWrap.hidden-out {
+      animation: fastOut .25s ease forwards !important;
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       CAMERA SHAKE  (keyframe; applied via JS inline style)
+    ══════════════════════════════════════════════════════════════ */
+    @keyframes shake {
+      0%,100% { transform:none; }
+      10%     { transform:translate(-7px, 4px); }
+      22%     { transform:translate(7px,-5px); }
+      36%     { transform:translate(-5px, 3px); }
+      52%     { transform:translate(5px,-3px); }
+      68%     { transform:translate(-3px, 2px); }
+      82%     { transform:translate(3px,-1px); }
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       FLASHES  — position:fixed so they cover the full viewport
+       Included in #scene so they reset cleanly on clone-restart.
+    ══════════════════════════════════════════════════════════════ */
+    .flash {
+      position: fixed; inset: 0;
+      background: #fff;
+      opacity: 0; pointer-events: none; z-index: 60;
+    }
+
+    /* Strong flash — used for trophy→logo transform */
+    .flash.pop-strong { animation: flashStrong .48s ease-out forwards !important; }
+    @keyframes flashStrong {
+      0%   { opacity:0; }
+      9%   { opacity:.94; }
+      100% { opacity:0; }
+    }
+
+    /* Medium flash — used for ball snap */
+    .flash.pop-medium { animation: flashMedium .42s ease-out forwards !important; }
+    @keyframes flashMedium {
+      0%   { opacity:0; }
+      10%  { opacity:.72; }
+      100% { opacity:0; }
+    }
+
+
+    /* ══════════════════════════════════════════════════════════════
+       REPLAY BUTTON
+    ══════════════════════════════════════════════════════════════ */
+    #replay-btn {
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%);
-      background: rgba(255,255,255,.1);
-      color: #fff;
-      border: 1px solid rgba(255,255,255,.25);
-      padding: 10px 28px;
-      border-radius: 20px;
-      font-size: 12px;
-      cursor: pointer;
-      z-index: 200;
-      font-family: monospace;
-      letter-spacing: 1.5px;
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.65);
+      border: 1px solid rgba(255,255,255,.2);
+      padding: 11px 36px; border-radius: 24px;
+      font-size: 12px; letter-spacing: 2.5px;
+      cursor: pointer; z-index: 200;
+      font-family: 'Courier New', monospace;
+      transition: background .2s, color .2s, border-color .2s;
     }
+    #replay-btn:hover {
+      background: rgba(255,255,255,.16);
+      color: #fff;
+      border-color: rgba(255,255,255,.35);
+    }
+
   </style>
 </head>
 <body>
 
-<div class="overlay"></div>
+<!-- ══════════════════════════════════════════════════════════
+     PARTICLES CANVAS + BACKGROUND
+══════════════════════════════════════════════════════════ -->
+<canvas id="bg"></canvas>
+<div class="ambient"></div>
+<div class="lens"></div>
 
-<div class="scene" id="scene">
-  <div class="stage">
-    <div class="letras">
-      <img src="assets/anim/letras.png" alt="2026"/>
+<!-- ══════════════════════════════════════════════════════════
+     MAIN SCENE  (cloned on restart — everything resets)
+══════════════════════════════════════════════════════════ -->
+<div id="scene">
+  <div class="stage" id="stage">
+
+    <!-- ── Step 1: TROPHY ───────────────────────────────── -->
+    <div class="slot trophy" id="trophy">
+      <img src="assets/anim/2026/copa_dorada.png" alt=""/>
     </div>
-    <div class="copa">
-      <img src="assets/anim/copa.png" alt="Copa"/>
+
+    <!-- ── Step 2: COLORED PIECES (fly into trophy) ──────── -->
+    <div class="slot piece piece-mexico" id="pMex">
+      <img src="assets/anim/2026/mexico.png" alt=""/>
     </div>
-  </div>
-</div>
+    <div class="slot piece piece-unidos" id="pUni">
+      <img src="assets/anim/2026/unidos.png" alt=""/>
+    </div>
+    <div class="slot piece piece-canada" id="pCan">
+      <img src="assets/anim/2026/canada.png" alt=""/>
+    </div>
 
-<button class="replay" onclick="location.reload()">↺ REPLAY</button>
+    <!-- ── Step 3: ASSEMBLED LOGO (no ball, replaces trophy) -->
+    <div class="slot logo-wrap" id="logoWrap">
+      <img src="assets/anim/2026/copa.png" alt=""/>
+      <!-- glow burst overlay, triggered on ball snap -->
+      <div class="logo-glow" id="logoGlow"></div>
+    </div>
 
+    <!-- ── Step 4: BALL ──────────────────────────────────── -->
+    <div class="ball-wrap" id="ballWrap">
+      <img src="assets/anim/2026/pelota.png" alt=""/>
+    </div>
+
+    <!-- ── Step 4: PULSE RINGS ───────────────────────────── -->
+    <div class="pulse-ring pulse-ring-1" id="pulse1"></div>
+    <div class="pulse-ring pulse-ring-2" id="pulse2"></div>
+    <div class="pulse-ring pulse-ring-3" id="pulse3"></div>
+
+    <!-- ── Step 5: TEXT ──────────────────────────────────── -->
+    <div class="texto" id="texto">
+      <img src="assets/anim/2026/texto.png" alt=""/>
+    </div>
+
+    <!-- ── Final complete logo — replaces copa+ball after impact ── -->
+    <div class="slot final-logo" id="finalLogo">
+      <img src="assets/anim/2026/logo.png" alt=""/>
+    </div>
+
+    <!-- ── Flash overlays (fixed, reset on clone) ────────── -->
+    <div class="flash" id="flash1"></div>
+    <div class="flash" id="flash2"></div>
+
+  </div><!-- /stage -->
+</div><!-- /scene -->
+
+<!-- Test replay button -->
+<button id="replay-btn" onclick="restartAnimation()">↺ &nbsp; REPLAY ANIMATION</button>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════ -->
 <script>
-  setTimeout(() => {
-    document.getElementById('scene').classList.add('zoom-in');
-  }, 2600);
+(function () {
+
+  /* ════════════════════════════════════════════════════════
+     AUDIO
+     Files are at assets/sound/ relative to this HTML.
+     play() is wrapped in try/catch in case browser blocks
+     autoplay before user interaction.
+  ════════════════════════════════════════════════════════ */
+  const sfxKick  = new Audio('assets/sound/balll.mp3');
+  const sfxFinal = new Audio('assets/sound/final.mp3');
+  sfxKick.preload  = 'auto';
+  sfxFinal.preload = 'auto';
+
+  function playSound(audio) {
+    try {
+      audio.currentTime = 0;
+      audio.volume = 1;
+      const p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch (e) {}
+  }
+
+
+  /* ════════════════════════════════════════════════════════
+     PARTICLES
+  ════════════════════════════════════════════════════════ */
+  const cv = document.getElementById('bg');
+  const cx = cv.getContext('2d');
+  let pts  = [];
+
+  function resizeCv() { cv.width = innerWidth; cv.height = innerHeight; }
+
+  function mkPts() {
+    pts = Array.from({ length: 46 }, () => ({
+      x:  Math.random() * cv.width,
+      y:  Math.random() * cv.height,
+      r:  Math.random() * 1.3  + .28,
+      vy: -(Math.random() * .28 + .06),
+      vx: (Math.random() - .5) * .08,
+      a:  Math.random() * .32  + .07,
+      ph: Math.random() * 6.283,
+    }));
+  }
+
+  function tick(t) {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    const T = t * .001;
+    pts.forEach(p => {
+      p.y += p.vy;
+      p.x += p.vx;
+      if (p.y < -4) { p.y = cv.height + 4; p.x = Math.random() * cv.width; }
+      const alpha = p.a * (.5 + .5 * Math.sin(T * .52 + p.ph));
+      cx.beginPath();
+      cx.arc(p.x, p.y, p.r, 0, 6.283);
+      cx.fillStyle = `rgba(255,196,62,${alpha.toFixed(2)})`;
+      cx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+
+  resizeCv();
+  mkPts();
+  requestAnimationFrame(tick);
+  addEventListener('resize', () => { resizeCv(); mkPts(); });
+
+
+  /* ════════════════════════════════════════════════════════
+     HELPERS
+  ════════════════════════════════════════════════════════ */
+  const $  = id => document.getElementById(id);
+  let timers = [];
+  const at = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+
+
+  /* ════════════════════════════════════════════════════════
+     ANIMATION SCHEDULE
+
+     Full timeline:
+       0.00 s  Dark bg + particles + lens glow. Nothing else.
+       0.50 s  Trophy rises (CSS animation auto-triggers via delay).
+       1.30 s  Mexico piece flies from left  (JS triggers .fly)
+       1.55 s  Unidos piece flies from bottom
+       1.80 s  Canada piece flies from right
+       2.35 s  All three pieces at trophy — GATHER PHASE visible
+       2.80 s  IMPACT: flash · shake · pieces+trophy hide · logo appears
+       3.80 s  Logo alone visible for 1 full second
+       3.90 s  sound/balll.mp3 plays + ball enters from top-right
+       4.45 s  Ball SNAPS: sound/final.mp3 · flash · pulse · glow burst
+       4.82 s  Text slides up
+       5.40 s  Hold final composition
+  ════════════════════════════════════════════════════════ */
+  function scheduleAll() {
+
+    /* ① PIECES FLY IN ─────────────────────────────────── */
+    at(() => { $('pMex').classList.add('fly'); }, 1300);
+    at(() => { $('pUni').classList.add('fly'); }, 1550);
+    at(() => { $('pCan').classList.add('fly'); }, 1800);
+
+
+    /* ② IMPACT — trophy + pieces → assembled logo ──────── */
+    at(() => {
+      /* camera shake on the stage */
+      const s = $('stage');
+      s.style.animation = 'shake .30s ease';
+      setTimeout(() => { s.style.animation = ''; }, 320);
+
+      /* strong white flash */
+      $('flash1').classList.add('pop-strong');
+
+      /* hide trophy and all three pieces */
+      ['trophy', 'pMex', 'pUni', 'pCan'].forEach(id => $(id).classList.add('gone'));
+
+      /* reveal assembled logo with hot-white shine */
+      $('logoWrap').classList.add('visible');
+
+    }, 2800);
+
+
+    /* ③ BALL ENTERS ──────────────────────────────────── */
+    at(() => {
+      $('ballWrap').classList.add('shoot');
+    }, 3900);
+
+
+    /* ④ BALL SNAPS INTO LOGO ──────────────────────────── */
+    at(() => {
+      playSound(sfxFinal);
+
+      /* medium flash */
+      $('flash2').classList.add('pop-medium');
+
+      /* three expanding pulse rings */
+      $('pulse1').classList.add('pop');
+      $('pulse2').classList.add('pop');
+      $('pulse3').classList.add('pop');
+
+      /* radial glow burst centred on ball */
+      $('logoGlow').classList.add('burst');
+
+      /* subtle second shake */
+      const s = $('stage');
+      s.style.animation = 'shake .22s ease';
+      setTimeout(() => { s.style.animation = ''; }, 240);
+
+      /* logo brightness spike */
+      $('logoWrap').classList.add('snap');
+
+    }, 4450);
+
+
+    /* ⑤ IMPACT SWAP — hide copa + pelota, reveal complete logo ── */
+    at(() => {
+      /* fade out copa.png and pelota.png */
+      $('logoWrap').classList.add('hidden-out');
+      $('ballWrap').classList.add('hidden-out');
+
+      /* reveal logo.png — the fully assembled final logo */
+      $('finalLogo').classList.add('show');
+
+    }, 4550);
+
+    /* ⑥ Hold at 5.5 s — only logo.png visible, no auto-fade */
+
+  }
+
+  scheduleAll();
+
+
+  /* ════════════════════════════════════════════════════════
+     restartAnimation()
+
+     Exposed globally so your replay system can call it.
+     Clones #scene so every CSS keyframe resets to its
+     initial state automatically, then reschedules all
+     JS-driven events and resets audio.
+  ════════════════════════════════════════════════════════ */
+  window.restartAnimation = function () {
+    /* unlock audio synchronously during this user-gesture call
+       so later setTimeout-based play() calls are permitted */
+    [sfxKick, sfxFinal].forEach(a => {
+      try {
+        a.muted = true;
+        const p = a.play();
+        if (p) p.then(() => { a.pause(); a.currentTime = 0; a.muted = false; }).catch(() => {});
+      } catch(e) {}
+    });
+
+    /* cancel any pending JS timers */
+    timers.forEach(clearTimeout);
+    timers = [];
+
+    /* reset audio */
+    [sfxKick, sfxFinal].forEach(a => { try { a.currentTime = 0; } catch(e){} });
+
+    /* replace #scene with a fresh clone — all CSS animations restart */
+    const old   = $('scene');
+    const fresh = old.cloneNode(true);
+    old.replaceWith(fresh);
+
+    /* strip post-impact classes the clone may have inherited */
+    [$('logoWrap'), $('ballWrap')].forEach(el => {
+      if (el) el.classList.remove('hidden-out', 'snap');
+    });
+    const glow = $('logoGlow');
+    if (glow) glow.classList.remove('burst');
+    const fin = $('finalLogo');
+    if (fin) fin.classList.remove('show');
+
+    /* reschedule all JS-driven events */
+    scheduleAll();
+  };
+
+})();
 </script>
+
 </body>
 </html>
