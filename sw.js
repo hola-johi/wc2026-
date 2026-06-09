@@ -1,4 +1,4 @@
-const CACHE_NAME = 'predicho-v5';
+const CACHE_NAME = 'predicho-v6';
 const DATA_URL   = 'https://raw.githubusercontent.com/hola-johi/wc2026-/main/output/live_predictions.json';
 
 const STATIC_ASSETS = [
@@ -8,6 +8,14 @@ const STATIC_ASSETS = [
   '/wc2026-/assets/icono/icon-home-180.png',
   '/wc2026-/assets/icono/icon-home-192.png',
   '/wc2026-/assets/icono/icon-home-512.png',
+  '/wc2026-/assets/anim/2026/copa_dorada.png',
+  '/wc2026-/assets/anim/2026/mexico.png',
+  '/wc2026-/assets/anim/2026/unidos.png',
+  '/wc2026-/assets/anim/2026/canada.png',
+  '/wc2026-/assets/anim/2026/copa.png',
+  '/wc2026-/assets/anim/2026/pelota.png',
+  '/wc2026-/assets/anim/2026/logo.png',
+  '/wc2026-/assets/sound/final.mp3',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap',
 ];
 
