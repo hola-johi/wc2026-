@@ -2,11 +2,14 @@ name: 🔄 Update WC2026 Predictions
 
 on:
   schedule:
-    # Corre cada 45 minutos entre las 13:00 y 23:00 UTC
-    # = 10:00 a 20:00 hora Argentina (UTC-3)
+    # Corre cada 10 minutos — máx 10 min de retraso al terminar un partido
+    # Ventana: 13:00–23:59 UTC (cubre partidos a las 16, 20, 23 UTC)
+    # + 00:00–01:59 UTC para partidos que empiezan a las 23:00
     # Activo del 11 Jun al 19 Jul 2026
-    - cron: '0,45 13-23 * 6 *'    # Todo junio
-    - cron: '0,45 13-23 1-19 7 *' # 1 al 19 de julio
+    - cron: '0,10,20,30,40,50 13-23 * 6 *'    # Todo junio, horario partido
+    - cron: '0,10,20,30,40,50 0,1 * 6 *'       # Medianoche–1am UTC (junio)
+    - cron: '0,10,20,30,40,50 13-23 1-19 7 *'  # 1–19 julio, horario partido
+    - cron: '0,10,20,30,40,50 0,1 1-19 7 *'    # Medianoche–1am UTC (julio)
 
   # Trigger manual desde GitHub → Actions → Run workflow
   workflow_dispatch:
