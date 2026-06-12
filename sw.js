@@ -1,4 +1,4 @@
-const CACHE_NAME = 'predicho-v7';
+const CACHE_NAME = 'predicho-v8';
 const DATA_URL   = 'https://raw.githubusercontent.com/hola-johi/wc2026-/main/output/live_predictions.json';
 
 const STATIC_ASSETS = [
@@ -39,11 +39,27 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const url = event.request.url;
+  const isPage = event.request.mode === 'navigate' || event.request.destination === 'document';
+
+  if (isPage) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .then(res => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
 
   // Datos live — network first, fallback a cache
   if (url.includes('raw.githubusercontent.com') || url.includes('live_predictions')) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'no-store' })
         .then(res => {
           if (res.ok) {
             const clone = res.clone();

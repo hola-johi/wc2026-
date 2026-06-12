@@ -930,6 +930,7 @@ function renderRound(id) {
 let _prevScore    = null;
 let _prevMatchKey = null;
 let _pollTimer    = null;
+let _goalPollTimer = null;
 let _lastGoalId   = null;
 
 function dismissGoal() {
@@ -972,6 +973,19 @@ function checkGoal(data) {
   if      (g1 > p1) triggerGoal(lm.team1);
   else if (g2 > p2) triggerGoal(lm.team2);
   _prevScore = lm.actual_score;
+}
+
+async function checkManualGoal() {
+  try {
+    const gr = await fetch(GOAL_URL + "?t=" + Date.now(), { cache: "no-store" });
+    if (!gr.ok) return;
+
+    const gd = await gr.json();
+    if (gd.id && gd.id !== '0' && gd.id !== _lastGoalId) {
+      if (_lastGoalId !== null) triggerGoal(gd.team);
+      _lastGoalId = gd.id;
+    }
+  } catch(e) {}
 }
 
 // ─── RESUMEN ────────────────────────────────────────────────
@@ -1197,23 +1211,13 @@ const FALLBACK={generated_at:new Date().toISOString(),matches_played:0,matches_r
 async function init(){
   let data = FALLBACK;
   try{
-    const res=await fetch(DATA_URL+"?t="+Date.now());
+    const res=await fetch(DATA_URL+"?t="+Date.now(), { cache: "no-store" });
     if(res.ok) data=await res.json();
   } catch(e){
     document.getElementById("status-pill").style.background="rgba(215,119,6,.2)";
   }
   checkGoal(data);
-  // Check manual goal event from GitHub Action
-  try {
-    const gr = await fetch(GOAL_URL + "?t=" + Date.now());
-    if (gr.ok) {
-      const gd = await gr.json();
-      if (gd.id && gd.id !== '0' && gd.id !== _lastGoalId) {
-        if (_lastGoalId !== null) triggerGoal(gd.team);
-        _lastGoalId = gd.id;
-      }
-    }
-  } catch(e) {}
+  await checkManualGoal();
   renderResumen(data);
   renderPredichos(data);
   document.getElementById("loading").style.display="none";
@@ -1223,6 +1227,14 @@ async function init(){
   _pollTimer = setInterval(init, data.live_match ? 30000 : 5*60*1000);
 }
 init();
+clearInterval(_goalPollTimer);
+_goalPollTimer = setInterval(checkManualGoal, 5000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    init();
+    checkManualGoal();
+  }
+});
 </script>
 <!-- ══ GOAL OVERLAY ══ -->
 <div id="goal-overlay"></div>

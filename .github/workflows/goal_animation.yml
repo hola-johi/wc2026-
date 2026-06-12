@@ -1,10 +1,10 @@
-name: ⚽ Animación GOOOOAL
+name: Goal animation
 
 on:
   workflow_dispatch:
     inputs:
       team:
-        description: '🏳 País que metió el gol'
+        description: "Pais que metio el gol"
         required: true
         type: choice
         options:
@@ -73,35 +73,40 @@ on:
 
 jobs:
   trigger-goal:
+    name: Publish goal event
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: 📥 Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: ⚽ Write goal event
+      - name: Write goal_event.json
         run: |
+          set -euo pipefail
+
           TEAM="${{ github.event.inputs.team }}"
-          TS=$(date -u +%s)
-          ISO=$(date -u --iso-8601=seconds)
-          cat > output/goal_event.json <<EOF
-          {
-            "team": "${TEAM}",
-            "timestamp": "${ISO}",
-            "id": "${TS}"
-          }
-          EOF
+          TS="$(date -u +%s)"
+          ISO="$(date -u --iso-8601=seconds)"
 
-      - name: 💾 Commit & push
+          mkdir -p output
+          printf '{\n  "team": "%s",\n  "timestamp": "%s",\n  "id": "%s"\n}\n' \
+            "$TEAM" "$ISO" "$TS" > output/goal_event.json
+
+          echo "Generated output/goal_event.json:"
+          cat output/goal_event.json
+
+      - name: Commit and push
         run: |
+          set -euo pipefail
+
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "WC2026 Bot"
+
           git add output/goal_event.json
           TEAM="${{ github.event.inputs.team }}"
-          git commit -m "⚽ GOAL! ${TEAM} — $(date -u '+%H:%M UTC')"
+          git commit -m "GOAL! ${TEAM} - $(date -u '+%H:%M UTC')"
           git push
-          echo "✅ Goal event publicado para ${TEAM}"
+
+          echo "Goal event published for ${TEAM}"
