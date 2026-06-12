@@ -511,6 +511,7 @@
 
 <script>
 const DATA_URL = "https://raw.githubusercontent.com/hola-johi/wc2026-/main/output/live_predictions.json";
+const GOAL_URL = "https://raw.githubusercontent.com/hola-johi/wc2026-/main/output/goal_event.json";
 
 const FL={
   // fixture teams
@@ -929,6 +930,7 @@ function renderRound(id) {
 let _prevScore    = null;
 let _prevMatchKey = null;
 let _pollTimer    = null;
+let _lastGoalId   = null;
 
 function dismissGoal() {
   const o = document.getElementById('goal-overlay');
@@ -953,6 +955,7 @@ function triggerGoal(team) {
     ${flagImg}
     <span class="goal-hint">toca para cerrar</span>
   </div>`;
+  o.onclick = dismissGoal;
   o.classList.remove('out');
   o.classList.add('active');
   clearTimeout(o._t);
@@ -1200,6 +1203,17 @@ async function init(){
     document.getElementById("status-pill").style.background="rgba(215,119,6,.2)";
   }
   checkGoal(data);
+  // Check manual goal event from GitHub Action
+  try {
+    const gr = await fetch(GOAL_URL + "?t=" + Date.now());
+    if (gr.ok) {
+      const gd = await gr.json();
+      if (gd.id && gd.id !== '0' && gd.id !== _lastGoalId) {
+        if (_lastGoalId !== null) triggerGoal(gd.team);
+        _lastGoalId = gd.id;
+      }
+    }
+  } catch(e) {}
   renderResumen(data);
   renderPredichos(data);
   document.getElementById("loading").style.display="none";
@@ -1208,7 +1222,6 @@ async function init(){
   clearInterval(_pollTimer);
   _pollTimer = setInterval(init, data.live_match ? 30000 : 5*60*1000);
 }
-document.getElementById('goal-overlay').onclick = dismissGoal;
 init();
 </script>
 <!-- ══ GOAL OVERLAY ══ -->

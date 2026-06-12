@@ -1,0 +1,107 @@
+name: ⚽ Animación GOOOOAL
+
+on:
+  workflow_dispatch:
+    inputs:
+      team:
+        description: '🏳 País que metió el gol'
+        required: true
+        type: choice
+        options:
+          - Argentina
+          - Algeria
+          - Australia
+          - Austria
+          - Belgium
+          - Bolivia
+          - Bosnia
+          - Brazil
+          - Canada
+          - Cape Verde
+          - Chile
+          - Colombia
+          - Costa Rica
+          - Croatia
+          - Curacao
+          - Czechia
+          - DR Congo
+          - Denmark
+          - Ecuador
+          - Egypt
+          - England
+          - France
+          - Germany
+          - Ghana
+          - Guatemala
+          - Haiti
+          - Honduras
+          - Iceland
+          - Indonesia
+          - Iran
+          - Iraq
+          - Italy
+          - Ivory Coast
+          - Jamaica
+          - Japan
+          - Jordan
+          - Mexico
+          - Morocco
+          - Netherlands
+          - New Zealand
+          - Nigeria
+          - Norway
+          - Panama
+          - Paraguay
+          - Peru
+          - Poland
+          - Portugal
+          - Qatar
+          - Saudi Arabia
+          - Scotland
+          - Senegal
+          - South Africa
+          - South Korea
+          - Spain
+          - Sweden
+          - Switzerland
+          - Tunisia
+          - Turkey
+          - United States
+          - Uruguay
+          - Uzbekistan
+          - Venezuela
+
+jobs:
+  trigger-goal:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: ⚽ Write goal event
+        run: |
+          TEAM="${{ github.event.inputs.team }}"
+          TS=$(date -u +%s)
+          ISO=$(date -u --iso-8601=seconds)
+          cat > output/goal_event.json <<EOF
+          {
+            "team": "${TEAM}",
+            "timestamp": "${ISO}",
+            "id": "${TS}"
+          }
+          EOF
+
+      - name: 💾 Commit & push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "WC2026 Bot"
+          git add output/goal_event.json
+          TEAM="${{ github.event.inputs.team }}"
+          git commit -m "⚽ GOAL! ${TEAM} — $(date -u '+%H:%M UTC')"
+          git push
+          echo "✅ Goal event publicado para ${TEAM}"
