@@ -286,6 +286,63 @@
       .fc-venue{display:none}
     }
 
+    /* ACCURACY BADGES */
+    .badge { display:inline-flex; align-items:center; font-size:9px; font-weight:700; font-family:monospace; letter-spacing:.5px; padding:3px 9px; border-radius:20px; color:#fff; white-space:nowrap; }
+    .badge-exact   { background:#059669; }
+    .badge-partial { background:#D97706; }
+    .badge-wrong   { background:#DC2626; }
+    .badge-pending { background:#94A3B8; }
+
+    /* PREDICHOS TAB */
+    .acc-card { background:var(--card); border-radius:16px; box-shadow:var(--shd); padding:16px 14px; margin-bottom:18px; border-top:3px solid var(--nav); }
+    .acc-title { font-size:11px; font-weight:700; color:var(--nav); margin-bottom:12px; font-family:monospace; letter-spacing:1.5px; }
+    .acc-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+    .acc-item { background:rgba(26,58,143,.05); border-radius:10px; padding:8px 10px; }
+    .acc-num  { font-size:22px; font-weight:900; font-family:monospace; color:var(--nav); line-height:1; }
+    .acc-lbl  { font-size:9px; color:var(--sec); font-family:monospace; letter-spacing:1px; margin-top:2px; }
+    .acc-big  { text-align:center; padding:10px; background:rgba(5,150,105,.07); border-radius:10px; margin-top:8px; }
+    .acc-big-v { font-size:26px; font-weight:900; font-family:monospace; color:#059669; }
+    .acc-big-l { font-size:9px; color:#059669; font-family:monospace; letter-spacing:1px; }
+
+    /* MATCH RESULT CARDS */
+    .mr { background:var(--card); border-radius:14px; box-shadow:0 2px 8px rgba(26,58,143,.07); margin-bottom:8px; overflow:hidden; animation:up .2s ease both; border:1.5px solid var(--bdr); }
+    .mr-top { background:var(--nav); padding:6px 12px; display:flex; justify-content:space-between; align-items:center; }
+    .mr-meta { font-size:9px; color:rgba(255,255,255,.6); font-family:monospace; }
+    .mr-body { background:linear-gradient(135deg,#D6EAFF,#B8D6F5); padding:10px 12px 8px; }
+    .mr-row  { display:flex; align-items:center; gap:6px; }
+    .mr-team { flex:1; text-align:center; }
+    .mr-fl   { font-size:28px; line-height:1; display:block; margin-bottom:2px; }
+    .mr-ab   { font-size:11px; font-weight:800; color:var(--nav); }
+    .mr-ctr  { text-align:center; min-width:80px; }
+    .mr-actual { font-size:24px; font-family:monospace; font-weight:900; color:var(--nav); background:rgba(255,255,255,.75); border:1.5px solid rgba(26,58,143,.2); border-radius:8px; padding:3px 8px; display:block; }
+    .mr-pred   { font-size:11px; font-family:monospace; font-weight:700; color:var(--sec); background:rgba(255,255,255,.55); border:1px solid rgba(26,58,143,.12); border-radius:6px; padding:2px 6px; display:block; margin-top:3px; }
+    .mr-sc-lbl { font-size:7px; font-family:monospace; color:var(--nav); letter-spacing:1px; margin-top:1px; display:block; }
+    .mr-foot  { padding:6px 12px; display:flex; justify-content:space-between; align-items:center; background:rgba(26,58,143,.03); }
+    .mr-result-txt { font-size:10px; color:var(--sec); font-weight:600; }
+
+    /* UPCOMING MATCH CARDS */
+    .uc { background:var(--card); border-radius:12px; box-shadow:0 2px 8px rgba(26,58,143,.07); margin-bottom:8px; overflow:hidden; border:1.5px solid var(--bdr); }
+    .uc-top { background:var(--nav); padding:5px 11px; display:flex; justify-content:space-between; align-items:center; }
+    .uc-meta { font-size:9px; color:rgba(255,255,255,.6); font-family:monospace; }
+    .uc-body { padding:9px 12px; display:flex; align-items:center; gap:8px; }
+    .uc-team { flex:1; text-align:center; }
+    .uc-fl   { font-size:24px; line-height:1; display:block; margin-bottom:2px; }
+    .uc-ab   { font-size:11px; font-weight:800; color:var(--nav); }
+    .uc-ctr  { text-align:center; min-width:76px; }
+    .uc-sc   { font-size:20px; font-family:monospace; font-weight:900; color:var(--nav); background:rgba(255,255,255,.7); border:1.5px solid rgba(26,58,143,.18); border-radius:8px; padding:3px 8px; display:block; }
+    .uc-lbl  { font-size:7px; color:var(--nav); font-family:monospace; letter-spacing:1px; margin-top:2px; display:block; }
+    .uc-prob { font-size:9px; font-family:monospace; font-weight:700; color:var(--trt); margin-top:3px; }
+    .show-more-btn { width:100%; padding:10px; background:rgba(26,58,143,.07); border:1.5px solid var(--bdr); border-radius:10px; font-size:12px; font-weight:700; color:var(--nav); cursor:pointer; font-family:'Inter',sans-serif; margin-top:4px; transition:background .15s; }
+    .show-more-btn:hover { background:rgba(26,58,143,.13); }
+
+    /* LIVE BANNER */
+    .live-banner { background:var(--card); border-radius:16px; box-shadow:var(--shd); overflow:hidden; margin-bottom:18px; border:2px solid #DC2626; }
+    .live-top  { background:#DC2626; padding:8px 14px; display:flex; justify-content:space-between; align-items:center; }
+    .live-label { font-size:10px; font-weight:700; color:#fff; letter-spacing:1.5px; }
+    .live-sub   { font-size:9px; color:rgba(255,255,255,.8); font-family:monospace; }
+    .live-score { font-size:30px; font-family:monospace; font-weight:900; color:#DC2626; display:block; }
+    .live-slbl  { font-size:8px; color:#DC2626; font-family:monospace; letter-spacing:1px; margin-top:2px; display:block; animation:blink 1s infinite; }
+
     /* ══════════════════════════════════════════
        INTRO ANIMATION
     ══════════════════════════════════════════ */
@@ -394,7 +451,7 @@
 <div class="tabs-main">
   <button class="tab-main on"  onclick="switchMain('resumen',this)">Resumen</button>
   <button class="tab-main"     onclick="switchMain('partidos',this)">Partidos</button>
-  <button class="tab-main"     onclick="switchMain('jugadores',this)">Jugadores</button>
+  <button class="tab-main"     onclick="switchMain('jugadores',this)">Predichos</button>
 </div>
 
 <div class="tabs-round" id="round-tabs" style="display:none">
@@ -419,18 +476,9 @@
     <div id="partidos-content" style="padding-top:12px"></div>
   </div>
 
-  <!-- JUGADORES -->
+  <!-- PREDICHOS -->
   <div id="sec-jugadores" class="sec">
-    <div style="text-align:center;padding:24px 0 16px">
-      <div style="display:inline-block;font-size:10px;font-family:monospace;font-weight:700;letter-spacing:1.5px;color:var(--amb);border:1px solid rgba(215,119,6,.3);background:rgba(215,119,6,.08);padding:5px 14px;border-radius:20px;margin-bottom:16px">🚧 PRÓXIMAMENTE</div>
-      <div style="font-size:20px;font-weight:900;color:var(--nav);margin-bottom:8px">Predicciones por jugador</div>
-      <div style="font-size:13px;color:var(--sec);line-height:1.6;margin-bottom:20px">Estadísticas individuales y rendimiento<br/>integrados al modelo Monte Carlo.</div>
-    </div>
-    <div class="ph-feat"><span class="icon">🥇</span><div><div class="ph-ft">Goleador del torneo</div><div class="ph-fs">P(top scorer) — Haaland, Mbappé, Vinicius, Messi...</div></div></div>
-    <div class="ph-feat"><span class="icon">🏅</span><div><div class="ph-ft">Golden Ball predicho</div><div class="ph-fs">Mejor jugador según el modelo</div></div></div>
-    <div class="ph-feat"><span class="icon">⚡</span><div><div class="ph-ft">Impacto por estrella</div><div class="ph-fs">¿Cuánto baja el equipo sin Messi, Mbappé o Salah?</div></div></div>
-    <div class="ph-feat"><span class="icon">🟨</span><div><div class="ph-ft">Riesgo de suspensión</div><div class="ph-fs">Tarjetas predichas por jugador</div></div></div>
-    <div class="ph-feat"><span class="icon">🔥</span><div><div class="ph-ft">Jugadores en forma</div><div class="ph-fs">Top performers previo al mundial</div></div></div>
+    <div id="predichos-content" style="padding-top:12px"></div>
   </div>
 </main>
 
@@ -837,18 +885,25 @@ function renderRound(id) {
 function renderResumen(data) {
   const ranking = Object.entries(data.ranking||{}).sort((a,b)=>b[1].p_champion-a[1].p_champion);
   const top3=ranking.slice(0,3), top10=ranking.slice(0,10);
-  const nm=data.next_match||{team1:"Mexico",team2:"South Africa",pred_score:"2-0",date:"Jue 11 Jun",time:"16:00",group:"A",status:"scheduled"};
+  const nm=data.next_match||{team1:"Canada",team2:"Bosnia",pred_score:"2-1",date:"Vie 12 Jun",time:"16:00",group:"B",status:"scheduled"};
+  const lm=data.live_match||null;
   const played=data.matches_played||0;
   const genAt=new Date(data.generated_at||Date.now());
-  const isLive=nm.status==="live",isFin=nm.status==="finished";
-  const sv=(isLive||isFin)&&nm.actual_score?nm.actual_score:nm.pred_score;
-  const sl=isLive?"EN VIVO 🔴":isFin?"RESULTADO":"predicho";
 
   document.getElementById("status-pill").textContent=played>0?`${played} jugados`:"Pre-torneo · 11 Jun";
 
   const podHtml=`<div class="podium">${[["🥇","gold",top3[0]],["🥈","silver",top3[1]],["🥉","bronze",top3[2]]].map(([m,c,e])=>`<div class="pod ${c}"><div class="pod-stripe"></div><div class="pod-inner"><div class="pod-medal">${m}</div><span class="pod-flag">${fl(e?.[0])}</span><div class="pod-name">${e?.[0]||"—"}</div><div class="pod-pct">${e?.[1]?.p_champion?.toFixed(1)||"—"}%</div><div class="pod-lbl">P(CAMPEÓN)</div></div></div>`).join("")}</div>`;
 
-  const nmHtml=`<div class="nm"><div class="nm-top"><span class="nm-label">${isLive?"🔴 EN VIVO":isFin?"ÚLTIMO RESULTADO":"🗓 PRÓXIMO PARTIDO"}</span><span class="nm-sub">Grp ${nm.group||"A"} · ${nm.date||"11 Jun"} · ${nm.time||"16:00"}</span></div><div class="nm-body"><div class="nm-team"><span class="fl">${fl(nm.team1)}</span><div class="ab">${ab(nm.team1)}</div><div class="nm2">${nm.team1}</div></div><div class="nm-ctr"><span class="nm-score" style="color:${isLive?"var(--red)":"var(--nav)"}">${sv||"?-?"}</span><span class="nm-slbl">${sl}</span></div><div class="nm-team"><span class="fl">${fl(nm.team2)}</span><div class="ab">${ab(nm.team2)}</div><div class="nm2">${nm.team2}</div></div></div></div>`;
+  let nmHtml;
+  if (lm) {
+    const minStr = lm.minute ? ` · ${lm.minute}'` : '';
+    nmHtml=`<div class="live-banner"><div class="live-top"><span class="live-label">🔴 EN VIVO</span><span class="live-sub">Grp ${lm.group||"?"} · ${lm.date||""} · ${lm.time||""}${minStr}</span></div><div class="nm-body"><div class="nm-team"><span class="fl">${fl(lm.team1)}</span><div class="ab">${ab(lm.team1)}</div><div class="nm2">${lm.team1}</div></div><div class="nm-ctr"><span class="live-score">${lm.actual_score||"0-0"}</span><span class="live-slbl">EN VIVO</span></div><div class="nm-team"><span class="fl">${fl(lm.team2)}</span><div class="ab">${ab(lm.team2)}</div><div class="nm2">${lm.team2}</div></div></div></div>`;
+  } else {
+    const isLive=nm.status==="live",isFin=nm.status==="finished";
+    const sv=(isLive||isFin)&&nm.actual_score?nm.actual_score:nm.pred_score;
+    const sl=isLive?"EN VIVO 🔴":isFin?"RESULTADO":"predicho";
+    nmHtml=`<div class="nm"><div class="nm-top"><span class="nm-label">${isLive?"🔴 EN VIVO":isFin?"ÚLTIMO RESULTADO":"🗓 PRÓXIMO PARTIDO"}</span><span class="nm-sub">Grp ${nm.group||"B"} · ${nm.date||"12 Jun"} · ${nm.time||"16:00"}</span></div><div class="nm-body"><div class="nm-team"><span class="fl">${fl(nm.team1)}</span><div class="ab">${ab(nm.team1)}</div><div class="nm2">${nm.team1}</div></div><div class="nm-ctr"><span class="nm-score" style="color:${isLive?"var(--red)":"var(--nav)"}">${sv||"?-?"}</span><span class="nm-slbl">${sl}</span></div><div class="nm-team"><span class="fl">${fl(nm.team2)}</span><div class="ab">${ab(nm.team2)}</div><div class="nm2">${nm.team2}</div></div></div></div>`;
+  }
 
   const maxPct=top10[0]?.[1]?.p_champion||12;
   const rkHtml=`<div class="stitle">TOP FAVORITOS</div><div class="ranks">${top10.map(([n,s],i)=>{const d=s.p_change_vs_original||0;const tc=d>.5?"up":d<-.5?"dn":"fl",ta=d>.5?"↑":d<-.5?"↓":"→";const bw=Math.round((s.p_champion/maxPct)*100);return`<div class="rr"><span class="rk-n ${i<3?"t3":""}">#${i+1}</span><span class="rk-fl">${fl(n)}</span><span class="rk-nm">${n}</span><span class="rk-tr ${tc}">${ta}</span><div class="rk-s"><div class="rk-st"><span class="rk-v ch">${s.p_champion?.toFixed(1)}%</span><span class="rk-l">CAMP</span><div class="bb"><div class="bf" style="width:${bw}%"></div></div></div><div class="rk-st"><span class="rk-v sc">${s.p_final?.toFixed(1)}%</span><span class="rk-l">FINAL</span></div><div class="rk-st"><span class="rk-v tr">${s.p_semifinal?.toFixed(1)}%</span><span class="rk-l">SEMI</span></div></div></div>`;}).join("")}</div>`;
@@ -859,6 +914,160 @@ function renderResumen(data) {
   const ftHtml=`<div class="footer-card"><h3>📱 Widget iOS (Scriptable)</h3><code>${DATA_URL}</code><p>FotMob/Opta · ESPN · Wikipedia · FIFA.com · Transfermarkt</p></div><div class="update-info">↻ ${genAt.toLocaleString("es-AR",{timeZone:"America/Argentina/Buenos_Aires"})} · ${played} jugados · ${data.matches_remaining||104} restantes</div>`;
 
   document.getElementById("resumen-content").innerHTML=podHtml+nmHtml+rkHtml+mvHtml+ftHtml;
+}
+
+// ─── PREDICHOS ──────────────────────────────────────────────
+function badgeHtml(acc) {
+  const map = {
+    exact:   ['badge-exact',   '✅ EXACTO'],
+    partial: ['badge-partial', '⚡ PARCIAL'],
+    wrong:   ['badge-wrong',   '❌ ERRADO'],
+    pending: ['badge-pending', '🔮 PENDIENTE'],
+  };
+  const [cls, label] = map[acc] || map.pending;
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function matchResultCard(m, i) {
+  const resultText = m.accuracy==='exact' ? 'Predicción exacta ✓'
+    : m.accuracy==='partial' ? 'Ganador correcto, score diferente'
+    : 'Predicción incorrecta';
+  return `
+    <div class="mr" style="animation-delay:${i*.04}s">
+      <div class="mr-top">
+        ${badgeHtml(m.accuracy)}
+        <span class="mr-meta">Grp ${m.group} · ${m.date} · ${m.time}</span>
+      </div>
+      <div class="mr-body">
+        <div class="mr-row">
+          <div class="mr-team">
+            <span class="mr-fl">${fl(m.team1)}</span>
+            <span class="mr-ab">${ab(m.team1)}</span>
+          </div>
+          <div class="mr-ctr">
+            <span class="mr-actual">${m.actual_score||"?"}</span>
+            <span class="mr-pred">Pred: ${m.pred_score}</span>
+            <span class="mr-sc-lbl">REAL · PREDICHO</span>
+          </div>
+          <div class="mr-team">
+            <span class="mr-fl">${fl(m.team2)}</span>
+            <span class="mr-ab">${ab(m.team2)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="mr-foot">
+        <span class="mr-result-txt">${resultText}</span>
+        <span style="font-size:9px;color:var(--trt);font-family:monospace">${m.team1} ${m.pred_score} ${m.team2}</span>
+      </div>
+    </div>`;
+}
+
+function upcomingCard(t1, s1, t2, s2, prob, grp, date, time, i, isNext) {
+  const pred = `${s1}–${s2}`;
+  const winner = s1>s2?t1:s2>s1?t2:null;
+  const p2 = 100 - prob;
+  const winnerStr = winner ? `${fl(winner)} ${ab(winner)} gana · ${s1>s2?prob:p2}%` : `Empate predicho`;
+  return `
+    <div class="uc" style="animation-delay:${i*.03}s">
+      <div class="uc-top">
+        ${isNext ? `<span style="font-size:9px;font-weight:700;color:var(--cel);font-family:monospace;letter-spacing:1px">🗓 PRÓXIMO</span>` : badgeHtml('pending')}
+        <span class="uc-meta">Grp ${grp} · ${date} · ${time}</span>
+      </div>
+      <div class="uc-body">
+        <div class="uc-team">
+          <span class="uc-fl">${fl(t1)}</span>
+          <span class="uc-ab">${ab(t1)}</span>
+          <div class="uc-prob">${prob}%</div>
+        </div>
+        <div class="uc-ctr">
+          <span class="uc-sc">${pred}</span>
+          <span class="uc-lbl">PREDICCIÓN</span>
+        </div>
+        <div class="uc-team">
+          <span class="uc-fl">${fl(t2)}</span>
+          <span class="uc-ab">${ab(t2)}</span>
+          <div class="uc-prob">${p2}%</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPredichos(data) {
+  const acc = data.accuracy || {total_played:0,exact:0,partial:0,wrong:0,pct_exact:0,pct_winner_correct:0};
+  const finished = data.matches_finished || [];
+  const nm = data.next_match || {};
+
+  // Build set of finished pairs (both orders)
+  const finSet = new Set();
+  finished.forEach(m => { finSet.add(m.team1+'|'+m.team2); finSet.add(m.team2+'|'+m.team1); });
+  const nextKey1 = nm.team1&&nm.team2 ? nm.team1+'|'+nm.team2 : null;
+  const nextKey2 = nm.team1&&nm.team2 ? nm.team2+'|'+nm.team1 : null;
+
+  // All fixture matches flat
+  const allFix = [...J1,...J2,...J3];
+
+  // Upcoming = not finished and not the current next match
+  const upcoming = allFix.filter(([t1,,t2]) => {
+    const k1=t1+'|'+t2, k2=t2+'|'+t1;
+    return !finSet.has(k1) && !finSet.has(k2) && k1!==nextKey1 && k1!==nextKey2;
+  });
+
+  let html = '';
+
+  // ── Accuracy summary ──
+  if (acc.total_played > 0) {
+    html += `<div class="acc-card">
+      <div class="acc-title">📊 ACCURACY GENERAL</div>
+      <div style="font-size:12px;color:var(--sec);margin-bottom:10px">${acc.total_played} partido${acc.total_played!==1?'s':''} jugado${acc.total_played!==1?'s':''}</div>
+      <div class="acc-grid">
+        <div class="acc-item"><div class="acc-num" style="color:#059669">${acc.exact}</div><div class="acc-lbl">✅ EXACTAS · ${acc.pct_exact}%</div></div>
+        <div class="acc-item"><div class="acc-num" style="color:#D97706">${acc.partial}</div><div class="acc-lbl">⚡ PARCIALES · ${acc.partial>0?Math.round(acc.partial/acc.total_played*100):0}%</div></div>
+        <div class="acc-item"><div class="acc-num" style="color:#DC2626">${acc.wrong}</div><div class="acc-lbl">❌ ERRADAS · ${acc.wrong>0?Math.round(acc.wrong/acc.total_played*100):0}%</div></div>
+        <div class="acc-item"><div class="acc-num">${acc.pct_winner_correct}%</div><div class="acc-lbl">🏆 GANADOR CORRECTO</div></div>
+      </div>
+    </div>`;
+  }
+
+  // ── Finished matches ──
+  if (finished.length > 0) {
+    html += `<div class="stitle">PARTIDOS JUGADOS</div>`;
+    finished.forEach((m, i) => { html += matchResultCard(m, i); });
+  }
+
+  // ── Next match ──
+  if (nm.team1 && nm.team2) {
+    const [t1,s1str,t2,s2str] = [nm.team1, nm.pred_score?.split('-')[0]||'?', nm.team2, nm.pred_score?.split('-')[1]||'?'];
+    const [s1,s2] = [parseInt(s1str)||0, parseInt(s2str)||0];
+    html += `<div class="stitle">PRÓXIMO PARTIDO</div>`;
+    html += upcomingCard(t1,s1,t2,s2,nm.p1||50,nm.group||'?',nm.date||'',nm.time||'',0,true);
+  }
+
+  // ── Upcoming ──
+  const INITIAL_SHOW = 8;
+  if (upcoming.length > 0) {
+    html += `<div class="stitle">PRÓXIMOS PARTIDOS</div>`;
+    const shown = upcoming.slice(0, INITIAL_SHOW);
+    const rest  = upcoming.slice(INITIAL_SHOW);
+    shown.forEach((m, i) => {
+      const [t1,s1,t2,s2,prob,grp,date,time] = m;
+      html += upcomingCard(t1,s1,t2,s2,prob,grp,date,time,i+1,false);
+    });
+    if (rest.length > 0) {
+      html += `<div id="upcoming-rest" style="display:none">`;
+      rest.forEach((m, i) => {
+        const [t1,s1,t2,s2,prob,grp,date,time] = m;
+        html += upcomingCard(t1,s1,t2,s2,prob,grp,date,time,INITIAL_SHOW+i+1,false);
+      });
+      html += `</div>`;
+      html += `<button class="show-more-btn" onclick="document.getElementById('upcoming-rest').style.display='block';this.style.display='none'">Ver ${rest.length} partidos más ▾</button>`;
+    }
+  }
+
+  if (!acc.total_played && !finished.length && !upcoming.length) {
+    html = `<div style="text-align:center;padding:40px 20px;color:var(--trt);font-family:monospace">Cargando predicciones...</div>`;
+  }
+
+  document.getElementById('predichos-content').innerHTML = html;
 }
 
 // ─── NAV ────────────────────────────────────────────────────
@@ -885,13 +1094,23 @@ const FALLBACK={generated_at:new Date().toISOString(),matches_played:0,matches_r
     "Netherlands":{p_champion:3.9,p_final:7.7,p_semifinal:14.3,p_change_vs_original:0},
     "Colombia":{p_champion:3.1,p_final:6.4,p_semifinal:13.1,p_change_vs_original:0},
   },
-  next_match:{team1:"Mexico",team2:"South Africa",pred_score:"2-0",date:"Jue 11 Jun",time:"16:00",group:"A",status:"scheduled"},
+  next_match:{team1:"Canada",team2:"Bosnia",pred_score:"2-1",date:"Vie 12 Jun",time:"16:00",group:"B",p1:55,status:"scheduled"},
+  live_match:null,
+  matches_finished:[],
+  accuracy:{total_played:0,exact:0,partial:0,wrong:0,pct_exact:0,pct_winner_correct:0},
   biggest_movers:[],
 };
 
 async function init(){
-  try{const res=await fetch(DATA_URL+"?t="+Date.now());const data=res.ok?await res.json():FALLBACK;renderResumen(data);}
-  catch(e){renderResumen(FALLBACK);document.getElementById("status-pill").style.background="rgba(215,119,6,.2)";}
+  let data = FALLBACK;
+  try{
+    const res=await fetch(DATA_URL+"?t="+Date.now());
+    if(res.ok) data=await res.json();
+  } catch(e){
+    document.getElementById("status-pill").style.background="rgba(215,119,6,.2)";
+  }
+  renderResumen(data);
+  renderPredichos(data);
   document.getElementById("loading").style.display="none";
   renderRound("j1");
 }
