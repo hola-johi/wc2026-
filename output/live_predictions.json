@@ -298,14 +298,27 @@
     }
   },
   "next_match": {
-    "team1": "Mexico",
-    "team2": "South Africa",
-    "pred_score": "2-0",
-    "date": "Jue 11 Jun",
+    "team1": "Canada",
+    "team2": "Bosnia",
+    "pred_score": "2-1",
+    "actual_score": null,
+    "winner_pred": "Canada",
+    "actual_winner": null,
+    "date": "Vie 12 Jun",
     "time": "16:00",
-    "group": "A",
-    "p1": 64,
+    "group": "B",
+    "p1": 55,
     "status": "scheduled"
+  },
+  "live_match": null,
+  "matches_finished": [],
+  "accuracy": {
+    "total_played": 0,
+    "exact": 0,
+    "partial": 0,
+    "wrong": 0,
+    "pct_exact": 0.0,
+    "pct_winner_correct": 0.0
   },
   "biggest_movers": [
     {

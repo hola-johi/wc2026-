@@ -60,11 +60,123 @@ NAME_MAP: dict[str, str] = {
     "Iran": "Iran",
     "New Zealand": "New Zealand",
     "Saudi Arabia": "Saudi Arabia",
+    # Extra normalizations for API name variants
+    "Bosnia and Herzegovina": "Bosnia",
+    "Bosnia-Herzegovina": "Bosnia",
+    "Bosnia & Herzegovina": "Bosnia",
+    "Bosnia": "Bosnia",
+    "Curaçao": "Curacao",
+    "Curacao": "Curacao",
+    "Congo DR": "DR Congo",
+    "DR Congo": "DR Congo",
+    "Cape Verde Islands": "Cape Verde",
+    "Cape Verde": "Cape Verde",
+    "Czech Republic": "Czechia",
+    "Czechia": "Czechia",
+    "Scotland": "Scotland",
+    "Northern Ireland": "Northern Ireland",
 }
 
 
 def normalize(name: str) -> str:
     return NAME_MAP.get(name, name)
+
+
+# ── All 72 group-stage matches in fixture order ───────────────────────────────
+# Format: team1, team2, pred_score (from team1 POV), winner_pred, group, date, time, p1
+FIXTURE_SORTED: list[dict] = [
+    # ── JORNADA 1 ─────────────────────────────────────────────────────────────
+    # June 11
+    {"team1":"Mexico",       "team2":"South Africa", "pred_score":"2-0","winner_pred":"Mexico",       "group":"A","date":"Jue 11 Jun","time":"16:00","p1":64},
+    {"team1":"South Korea",  "team2":"Czechia",      "pred_score":"1-0","winner_pred":"South Korea",  "group":"A","date":"Jue 11 Jun","time":"23:00","p1":58},
+    # June 12
+    {"team1":"Canada",       "team2":"Bosnia",       "pred_score":"2-1","winner_pred":"Canada",       "group":"B","date":"Vie 12 Jun","time":"16:00","p1":55},
+    {"team1":"Switzerland",  "team2":"Qatar",        "pred_score":"3-0","winner_pred":"Switzerland",  "group":"B","date":"Vie 12 Jun","time":"20:00","p1":82},
+    {"team1":"United States","team2":"Paraguay",     "pred_score":"2-0","winner_pred":"United States","group":"D","date":"Vie 12 Jun","time":"23:00","p1":68},
+    # June 13
+    {"team1":"Germany",      "team2":"Curacao",      "pred_score":"4-0","winner_pred":"Germany",      "group":"E","date":"Sáb 13 Jun","time":"16:00","p1":95},
+    {"team1":"Ecuador",      "team2":"Ivory Coast",  "pred_score":"2-1","winner_pred":"Ecuador",      "group":"E","date":"Sáb 13 Jun","time":"20:00","p1":55},
+    {"team1":"Netherlands",  "team2":"Tunisia",      "pred_score":"3-0","winner_pred":"Netherlands",  "group":"F","date":"Sáb 13 Jun","time":"23:00","p1":85},
+    # June 14
+    {"team1":"Belgium",      "team2":"New Zealand",  "pred_score":"3-0","winner_pred":"Belgium",      "group":"G","date":"Dom 14 Jun","time":"16:00","p1":88},
+    {"team1":"Egypt",        "team2":"Iran",         "pred_score":"1-0","winner_pred":"Egypt",        "group":"G","date":"Dom 14 Jun","time":"20:00","p1":54},
+    {"team1":"Spain",        "team2":"Saudi Arabia", "pred_score":"3-0","winner_pred":"Spain",        "group":"H","date":"Dom 14 Jun","time":"23:00","p1":90},
+    # June 15
+    {"team1":"Brazil",       "team2":"Scotland",     "pred_score":"3-0","winner_pred":"Brazil",       "group":"C","date":"Lun 15 Jun","time":"16:00","p1":85},
+    {"team1":"Morocco",      "team2":"Haiti",        "pred_score":"2-0","winner_pred":"Morocco",      "group":"C","date":"Lun 15 Jun","time":"20:00","p1":80},
+    {"team1":"France",       "team2":"Iraq",         "pred_score":"3-0","winner_pred":"France",       "group":"I","date":"Lun 15 Jun","time":"23:00","p1":88},
+    # June 16
+    {"team1":"Norway",       "team2":"Senegal",      "pred_score":"2-1","winner_pred":"Norway",       "group":"I","date":"Mar 16 Jun","time":"16:00","p1":57},
+    {"team1":"Argentina",    "team2":"Jordan",       "pred_score":"3-0","winner_pred":"Argentina",    "group":"J","date":"Mar 16 Jun","time":"20:00","p1":92},
+    {"team1":"Austria",      "team2":"Algeria",      "pred_score":"2-1","winner_pred":"Austria",      "group":"J","date":"Mar 16 Jun","time":"23:00","p1":55},
+    # June 17
+    {"team1":"Japan",        "team2":"Sweden",       "pred_score":"2-1","winner_pred":"Japan",        "group":"F","date":"Mié 17 Jun","time":"16:00","p1":52},
+    {"team1":"Portugal",     "team2":"Uzbekistan",   "pred_score":"3-0","winner_pred":"Portugal",     "group":"K","date":"Mié 17 Jun","time":"20:00","p1":90},
+    {"team1":"Colombia",     "team2":"DR Congo",     "pred_score":"2-0","winner_pred":"Colombia",     "group":"K","date":"Mié 17 Jun","time":"23:00","p1":70},
+    # June 18
+    {"team1":"England",      "team2":"Panama",       "pred_score":"2-0","winner_pred":"England",      "group":"L","date":"Jue 18 Jun","time":"16:00","p1":85},
+    {"team1":"Croatia",      "team2":"Ghana",        "pred_score":"2-1","winner_pred":"Croatia",      "group":"L","date":"Jue 18 Jun","time":"20:00","p1":60},
+    {"team1":"Turkey",       "team2":"Australia",    "pred_score":"2-1","winner_pred":"Turkey",       "group":"D","date":"Jue 18 Jun","time":"23:00","p1":55},
+    {"team1":"Uruguay",      "team2":"Cape Verde",   "pred_score":"2-0","winner_pred":"Uruguay",      "group":"H","date":"Jue 18 Jun","time":"19:00","p1":75},
+    # ── JORNADA 2 ─────────────────────────────────────────────────────────────
+    # June 19
+    {"team1":"South Korea",  "team2":"Mexico",       "pred_score":"2-1","winner_pred":"South Korea",  "group":"A","date":"Vie 19 Jun","time":"16:00","p1":52},
+    {"team1":"Czechia",      "team2":"South Africa", "pred_score":"2-0","winner_pred":"Czechia",      "group":"A","date":"Vie 19 Jun","time":"20:00","p1":72},
+    {"team1":"Switzerland",  "team2":"Bosnia",       "pred_score":"2-1","winner_pred":"Switzerland",  "group":"B","date":"Vie 19 Jun","time":"23:00","p1":62},
+    # June 20
+    {"team1":"Qatar",        "team2":"Canada",       "pred_score":"1-2","winner_pred":"Canada",       "group":"B","date":"Sáb 20 Jun","time":"16:00","p1":35},
+    {"team1":"Germany",      "team2":"Ecuador",      "pred_score":"2-0","winner_pred":"Germany",      "group":"E","date":"Sáb 20 Jun","time":"20:00","p1":65},
+    {"team1":"Ivory Coast",  "team2":"Curacao",      "pred_score":"2-0","winner_pred":"Ivory Coast",  "group":"E","date":"Sáb 20 Jun","time":"23:00","p1":78},
+    # June 21
+    {"team1":"Netherlands",  "team2":"Japan",        "pred_score":"2-0","winner_pred":"Netherlands",  "group":"F","date":"Dom 21 Jun","time":"16:00","p1":62},
+    {"team1":"Sweden",       "team2":"Tunisia",      "pred_score":"2-1","winner_pred":"Sweden",       "group":"F","date":"Dom 21 Jun","time":"20:00","p1":60},
+    {"team1":"Egypt",        "team2":"New Zealand",  "pred_score":"2-0","winner_pred":"Egypt",        "group":"G","date":"Dom 21 Jun","time":"23:00","p1":80},
+    # June 22
+    {"team1":"Belgium",      "team2":"Iran",         "pred_score":"2-0","winner_pred":"Belgium",      "group":"G","date":"Lun 22 Jun","time":"16:00","p1":72},
+    {"team1":"Spain",        "team2":"Uruguay",      "pred_score":"2-0","winner_pred":"Spain",        "group":"H","date":"Lun 22 Jun","time":"20:00","p1":65},
+    {"team1":"Cape Verde",   "team2":"Saudi Arabia", "pred_score":"1-0","winner_pred":"Cape Verde",   "group":"H","date":"Lun 22 Jun","time":"23:00","p1":52},
+    # June 23
+    {"team1":"France",       "team2":"Senegal",      "pred_score":"2-1","winner_pred":"France",       "group":"I","date":"Mar 23 Jun","time":"16:00","p1":68},
+    {"team1":"Iraq",         "team2":"Norway",       "pred_score":"1-2","winner_pred":"Norway",       "group":"I","date":"Mar 23 Jun","time":"20:00","p1":35},
+    {"team1":"Argentina",    "team2":"Algeria",      "pred_score":"2-0","winner_pred":"Argentina",    "group":"J","date":"Mar 23 Jun","time":"23:00","p1":75},
+    # June 24
+    {"team1":"Jordan",       "team2":"Austria",      "pred_score":"0-2","winner_pred":"Austria",      "group":"J","date":"Mié 24 Jun","time":"16:00","p1":32},
+    {"team1":"Colombia",     "team2":"Uzbekistan",   "pred_score":"2-0","winner_pred":"Colombia",     "group":"K","date":"Mié 24 Jun","time":"20:00","p1":78},
+    {"team1":"DR Congo",     "team2":"Portugal",     "pred_score":"2-1","winner_pred":"DR Congo",     "group":"K","date":"Mié 24 Jun","time":"23:00","p1":32},
+    # June 25
+    {"team1":"England",      "team2":"Ghana",        "pred_score":"2-0","winner_pred":"England",      "group":"L","date":"Jue 25 Jun","time":"16:00","p1":75},
+    {"team1":"Croatia",      "team2":"Panama",       "pred_score":"2-0","winner_pred":"Croatia",      "group":"L","date":"Jue 25 Jun","time":"20:00","p1":78},
+    {"team1":"United States","team2":"Australia",    "pred_score":"2-1","winner_pred":"United States","group":"D","date":"Jue 25 Jun","time":"23:00","p1":68},
+    {"team1":"Paraguay",     "team2":"Turkey",       "pred_score":"0-2","winner_pred":"Turkey",       "group":"D","date":"Jue 25 Jun","time":"19:00","p1":32},
+    {"team1":"Brazil",       "team2":"Morocco",      "pred_score":"2-0","winner_pred":"Brazil",       "group":"C","date":"Jue 25 Jun","time":"15:00","p1":65},
+    {"team1":"Haiti",        "team2":"Scotland",     "pred_score":"0-2","winner_pred":"Scotland",     "group":"C","date":"Jue 25 Jun","time":"22:00","p1":30},
+    # ── JORNADA 3 ─────────────────────────────────────────────────────────────
+    # June 26-27
+    {"team1":"South Korea",  "team2":"South Africa", "pred_score":"2-0","winner_pred":"South Korea",  "group":"A","date":"Vie 26 Jun","time":"20:00","p1":82},
+    {"team1":"Mexico",       "team2":"Czechia",      "pred_score":"2-1","winner_pred":"Mexico",       "group":"A","date":"Vie 26 Jun","time":"20:00","p1":60},
+    {"team1":"Switzerland",  "team2":"Canada",       "pred_score":"1-0","winner_pred":"Switzerland",  "group":"B","date":"Vie 26 Jun","time":"23:00","p1":52},
+    {"team1":"Bosnia",       "team2":"Qatar",        "pred_score":"2-1","winner_pred":"Bosnia",       "group":"B","date":"Vie 26 Jun","time":"23:00","p1":62},
+    {"team1":"Brazil",       "team2":"Haiti",        "pred_score":"4-0","winner_pred":"Brazil",       "group":"C","date":"Sáb 27 Jun","time":"16:00","p1":95},
+    {"team1":"Morocco",      "team2":"Scotland",     "pred_score":"1-0","winner_pred":"Morocco",      "group":"C","date":"Sáb 27 Jun","time":"16:00","p1":60},
+    {"team1":"United States","team2":"Turkey",       "pred_score":"1-0","winner_pred":"United States","group":"D","date":"Sáb 27 Jun","time":"20:00","p1":58},
+    {"team1":"Australia",    "team2":"Paraguay",     "pred_score":"2-0","winner_pred":"Australia",    "group":"D","date":"Sáb 27 Jun","time":"20:00","p1":72},
+    {"team1":"Germany",      "team2":"Ivory Coast",  "pred_score":"3-0","winner_pred":"Germany",      "group":"E","date":"Dom 27 Jun","time":"16:00","p1":80},
+    {"team1":"Ecuador",      "team2":"Curacao",      "pred_score":"2-0","winner_pred":"Ecuador",      "group":"E","date":"Dom 27 Jun","time":"16:00","p1":88},
+    {"team1":"Netherlands",  "team2":"Sweden",       "pred_score":"2-0","winner_pred":"Netherlands",  "group":"F","date":"Dom 27 Jun","time":"20:00","p1":68},
+    {"team1":"Japan",        "team2":"Tunisia",      "pred_score":"2-0","winner_pred":"Japan",        "group":"F","date":"Dom 27 Jun","time":"20:00","p1":78},
+    {"team1":"Belgium",      "team2":"Egypt",        "pred_score":"2-1","winner_pred":"Belgium",      "group":"G","date":"Dom 27 Jun","time":"16:00","p1":62},
+    {"team1":"Iran",         "team2":"New Zealand",  "pred_score":"2-0","winner_pred":"Iran",         "group":"G","date":"Dom 27 Jun","time":"16:00","p1":72},
+    {"team1":"Spain",        "team2":"Cape Verde",   "pred_score":"3-0","winner_pred":"Spain",        "group":"H","date":"Dom 27 Jun","time":"20:00","p1":88},
+    {"team1":"Uruguay",      "team2":"Saudi Arabia", "pred_score":"2-0","winner_pred":"Uruguay",      "group":"H","date":"Dom 27 Jun","time":"20:00","p1":80},
+    {"team1":"France",       "team2":"Norway",       "pred_score":"2-1","winner_pred":"France",       "group":"I","date":"Dom 27 Jun","time":"16:00","p1":58},
+    {"team1":"Senegal",      "team2":"Iraq",         "pred_score":"2-0","winner_pred":"Senegal",      "group":"I","date":"Dom 27 Jun","time":"16:00","p1":72},
+    {"team1":"Argentina",    "team2":"Austria",      "pred_score":"1-0","winner_pred":"Argentina",    "group":"J","date":"Dom 27 Jun","time":"20:00","p1":62},
+    {"team1":"Algeria",      "team2":"Jordan",       "pred_score":"2-0","winner_pred":"Algeria",      "group":"J","date":"Dom 27 Jun","time":"20:00","p1":75},
+    {"team1":"Portugal",     "team2":"Colombia",     "pred_score":"2-1","winner_pred":"Portugal",     "group":"K","date":"Dom 27 Jun","time":"16:00","p1":55},
+    {"team1":"DR Congo",     "team2":"Uzbekistan",   "pred_score":"2-0","winner_pred":"DR Congo",     "group":"K","date":"Dom 27 Jun","time":"16:00","p1":72},
+    {"team1":"England",      "team2":"Croatia",      "pred_score":"1-0","winner_pred":"England",      "group":"L","date":"Dom 27 Jun","time":"20:00","p1":57},
+    {"team1":"Ghana",        "team2":"Panama",       "pred_score":"2-0","winner_pred":"Ghana",        "group":"L","date":"Dom 27 Jun","time":"20:00","p1":70},
+]
 
 
 # ── API helpers ───────────────────────────────────────────────────────────────
@@ -109,6 +221,7 @@ def fetch_wc_matches() -> list[dict]:
             "home_score": score.get("home"),
             "away_score": score.get("away"),
             "date": m.get("utcDate", ""),
+            "minute": m.get("minute"),
         })
     return matches
 
@@ -136,33 +249,199 @@ def _fmt_time(iso: str) -> str:
         return "—"
 
 
-def next_match_info(matches: list[dict]) -> dict:
+# ── Fixture helpers ───────────────────────────────────────────────────────────
+
+def _find_in_fixture(home: str, away: str, fixture: list[dict]) -> dict | None:
+    """Find a fixture entry matching home/away in either order."""
+    for fix in fixture:
+        if (fix["team1"] == home and fix["team2"] == away) or \
+           (fix["team1"] == away and fix["team2"] == home):
+            return fix
+    return None
+
+
+def _finished_pairs(matches: list[dict]) -> set[tuple[str, str]]:
+    """Return set of (t1, t2) tuples for all FINISHED matches (both orders)."""
+    pairs: set[tuple[str, str]] = set()
+    for m in matches:
+        if m["status"] == "FINISHED":
+            pairs.add((m["home"], m["away"]))
+            pairs.add((m["away"], m["home"]))
+    return pairs
+
+
+# ── Live / finished data builders ────────────────────────────────────────────
+
+def build_live_match(matches: list[dict], fixture: list[dict]) -> dict | None:
+    """Return live match info if any match is currently IN_PLAY, else None."""
+    live = [m for m in matches if m["status"] in ("LIVE", "IN_PLAY", "PAUSED")]
+    if not live:
+        return None
+    m = live[0]
+    fix = _find_in_fixture(m["home"], m["away"], fixture)
+    grp = m["group"].replace("GROUP_", "") if m["group"] else "KO"
+
+    hs  = m["home_score"] or 0
+    aws = m["away_score"] or 0
+    if fix and m["home"] == fix["team2"]:
+        # API home/away is reversed relative to fixture team1/team2
+        actual_score = f"{aws}-{hs}"
+    else:
+        actual_score = f"{hs}-{aws}"
+
+    return {
+        "team1":       fix["team1"]      if fix else m["home"],
+        "team2":       fix["team2"]      if fix else m["away"],
+        "actual_score": actual_score,
+        "pred_score":  fix["pred_score"] if fix else "—",
+        "winner_pred": fix["winner_pred"] if fix else m["home"],
+        "group":       fix["group"]      if fix else grp,
+        "date":        fix["date"]       if fix else _fmt_date(m["date"]),
+        "time":        fix["time"]       if fix else _fmt_time(m["date"]),
+        "minute":      m.get("minute"),
+        "status":      "live",
+    }
+
+
+def build_matches_finished(matches: list[dict], fixture: list[dict]) -> list[dict]:
+    """Build list of finished matches enriched with prediction vs actual data."""
+    result = []
+    for m in matches:
+        if m["status"] != "FINISHED":
+            continue
+        hs, aws = m["home_score"], m["away_score"]
+        if hs is None or aws is None:
+            continue
+
+        fix = _find_in_fixture(m["home"], m["away"], fixture)
+        if fix is None:
+            # Match not in group-stage fixture (knockout), skip
+            continue
+
+        # Actual score from team1 (fixture) perspective
+        if m["home"] == fix["team1"]:
+            t1_goals, t2_goals = hs, aws
+        else:
+            t1_goals, t2_goals = aws, hs
+
+        actual_score = f"{t1_goals}-{t2_goals}"
+
+        if t1_goals > t2_goals:
+            actual_winner = fix["team1"]
+        elif t2_goals > t1_goals:
+            actual_winner = fix["team2"]
+        else:
+            actual_winner = None  # draw
+
+        winner_pred = fix["winner_pred"]
+        pred_score  = fix["pred_score"]
+
+        if actual_winner == winner_pred and actual_score == pred_score:
+            accuracy = "exact"
+        elif actual_winner == winner_pred:
+            accuracy = "partial"
+        else:
+            accuracy = "wrong"
+
+        result.append({
+            "team1":         fix["team1"],
+            "team2":         fix["team2"],
+            "pred_score":    pred_score,
+            "actual_score":  actual_score,
+            "winner_pred":   winner_pred,
+            "actual_winner": actual_winner,
+            "accuracy":      accuracy,
+            "group":         fix["group"],
+            "date":          fix["date"],
+            "time":          fix["time"],
+            "stage":         m.get("stage", "GROUP_STAGE"),
+        })
+
+    # Preserve fixture order
+    order = {(f["team1"], f["team2"]): i for i, f in enumerate(fixture)}
+    result.sort(key=lambda x: order.get((x["team1"], x["team2"]), 999))
+    return result
+
+
+def build_accuracy_summary(matches_finished: list[dict]) -> dict:
+    total = len(matches_finished)
+    if total == 0:
+        return {
+            "total_played": 0, "exact": 0, "partial": 0, "wrong": 0,
+            "pct_exact": 0.0, "pct_winner_correct": 0.0,
+        }
+    exact   = sum(1 for m in matches_finished if m["accuracy"] == "exact")
+    partial = sum(1 for m in matches_finished if m["accuracy"] == "partial")
+    wrong   = sum(1 for m in matches_finished if m["accuracy"] == "wrong")
+    return {
+        "total_played":       total,
+        "exact":              exact,
+        "partial":            partial,
+        "wrong":              wrong,
+        "pct_exact":          round(exact / total * 100, 1),
+        "pct_winner_correct": round((exact + partial) / total * 100, 1),
+    }
+
+
+def next_match_info(matches: list[dict], fixture: list[dict]) -> dict:
+    """Return the first upcoming (or live) match from the fixture."""
+    # Live match takes priority
     live = [m for m in matches if m["status"] in ("LIVE", "IN_PLAY", "PAUSED")]
     if live:
         m = live[0]
+        fix = _find_in_fixture(m["home"], m["away"], fixture)
+        grp = m["group"].replace("GROUP_", "") if m["group"] else "KO"
+        hs, aws = m["home_score"] or 0, m["away_score"] or 0
+        if fix and m["home"] == fix["team2"]:
+            actual_score = f"{aws}-{hs}"
+        else:
+            actual_score = f"{hs}-{aws}"
         return {
-            "team1": m["home"], "team2": m["away"],
-            "actual_score": f"{m['home_score'] or 0}-{m['away_score'] or 0}",
-            "pred_score":   f"{m['home_score'] or 0}-{m['away_score'] or 0}",
-            "date": _fmt_date(m["date"]), "time": _fmt_time(m["date"]),
-            "group": m["group"].replace("GROUP_", "") if m["group"] else "KO",
-            "p1": 50, "status": "live",
+            "team1":         fix["team1"]      if fix else m["home"],
+            "team2":         fix["team2"]      if fix else m["away"],
+            "actual_score":  actual_score,
+            "pred_score":    fix["pred_score"] if fix else "—",
+            "winner_pred":   fix["winner_pred"] if fix else m["home"],
+            "actual_winner": None,
+            "date":          fix["date"]       if fix else _fmt_date(m["date"]),
+            "time":          fix["time"]       if fix else _fmt_time(m["date"]),
+            "group":         fix["group"]      if fix else grp,
+            "p1":            fix["p1"]         if fix else 50,
+            "status":        "live",
         }
-    scheduled = [m for m in matches if m["status"] == "SCHEDULED"]
-    if scheduled:
-        m = scheduled[0]
-        return {
-            "team1": m["home"], "team2": m["away"],
-            "pred_score": "—",
-            "date": _fmt_date(m["date"]), "time": _fmt_time(m["date"]),
-            "group": m["group"].replace("GROUP_", "") if m["group"] else "KO",
-            "p1": 50, "status": "scheduled",
-        }
-    # Default pre-tournament
+
+    # First fixture match NOT yet finished
+    fin = _finished_pairs(matches)
+    for fix in fixture:
+        t1, t2 = fix["team1"], fix["team2"]
+        if (t1, t2) not in fin and (t2, t1) not in fin:
+            return {
+                "team1":         t1,
+                "team2":         t2,
+                "pred_score":    fix["pred_score"],
+                "actual_score":  None,
+                "winner_pred":   fix["winner_pred"],
+                "actual_winner": None,
+                "date":          fix["date"],
+                "time":          fix["time"],
+                "group":         fix["group"],
+                "p1":            fix["p1"],
+                "status":        "scheduled",
+            }
+
+    # Tournament not started or fully finished
     return {
-        "team1": "Mexico", "team2": "South Africa",
-        "pred_score": "2-0", "date": "Jue 11 Jun", "time": "16:00",
-        "group": "A", "p1": 64, "status": "scheduled",
+        "team1": fixture[0]["team1"] if fixture else "—",
+        "team2": fixture[0]["team2"] if fixture else "—",
+        "pred_score":    fixture[0]["pred_score"] if fixture else "—",
+        "actual_score":  None,
+        "winner_pred":   fixture[0]["winner_pred"] if fixture else "—",
+        "actual_winner": None,
+        "date":  fixture[0]["date"]  if fixture else "—",
+        "time":  fixture[0]["time"]  if fixture else "—",
+        "group": fixture[0]["group"] if fixture else "—",
+        "p1":    fixture[0]["p1"]    if fixture else 50,
+        "status": "scheduled",
     }
 
 
@@ -422,14 +701,23 @@ def run(demo: bool = False) -> None:
         key=lambda x: -abs(x["delta"]),
     )[:10]
 
+    # ── New enriched fields ───────────────────────────────────────────────────
+    matches_finished = build_matches_finished(matches, FIXTURE_SORTED)
+    live_match       = build_live_match(matches, FIXTURE_SORTED)
+    accuracy         = build_accuracy_summary(matches_finished)
+    nm               = next_match_info(matches, FIXTURE_SORTED)
+
     output = {
-        "generated_at":    datetime.now(timezone.utc).isoformat(),
-        "matches_played":  matches_played,
+        "generated_at":      datetime.now(timezone.utc).isoformat(),
+        "matches_played":    matches_played,
         "matches_remaining": matches_remaining,
-        "podium_current":  podium,
-        "ranking":         dict(ranked),
-        "next_match":      next_match_info(matches),
-        "biggest_movers":  movers,
+        "podium_current":    podium,
+        "ranking":           dict(ranked),
+        "next_match":        nm,
+        "live_match":        live_match,
+        "matches_finished":  matches_finished,
+        "accuracy":          accuracy,
+        "biggest_movers":    movers,
     }
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -439,6 +727,8 @@ def run(demo: bool = False) -> None:
     print(f"✅  Saved → {OUT}")
     print(f"Champion: {podium['champion']}  "
           f"({ranking.get(podium['champion'], {}).get('p_champion', 0):.1f}%)")
+    if nm:
+        print(f"Next match: {nm['team1']} vs {nm['team2']} ({nm['status']})")
 
 
 if __name__ == "__main__":
