@@ -317,8 +317,9 @@
     .mr-actual { font-size:24px; font-family:monospace; font-weight:900; color:var(--nav); background:rgba(255,255,255,.75); border:1.5px solid rgba(26,58,143,.2); border-radius:8px; padding:3px 8px; display:block; }
     .mr-pred   { font-size:11px; font-family:monospace; font-weight:700; color:var(--sec); background:rgba(255,255,255,.55); border:1px solid rgba(26,58,143,.12); border-radius:6px; padding:2px 6px; display:block; margin-top:3px; }
     .mr-sc-lbl { font-size:7px; font-family:monospace; color:var(--nav); letter-spacing:1px; margin-top:1px; display:block; }
+    .mr-nm     { font-size:9px; color:#334155; font-weight:600; text-align:center; line-height:1.2; margin-top:1px; }
     .mr-foot  { padding:6px 12px; display:flex; justify-content:space-between; align-items:center; background:rgba(26,58,143,.03); }
-    .mr-result-txt { font-size:10px; color:var(--sec); font-weight:600; }
+    .mr-result-txt { font-size:10px; font-weight:700; }
 
     /* UPCOMING MATCH CARDS */
     .uc { background:var(--card); border-radius:12px; box-shadow:0 2px 8px rgba(26,58,143,.07); margin-bottom:8px; overflow:hidden; border:1.5px solid var(--bdr); }
@@ -328,6 +329,7 @@
     .uc-team { flex:1; text-align:center; }
     .uc-fl   { font-size:24px; line-height:1; display:block; margin-bottom:2px; }
     .uc-ab   { font-size:11px; font-weight:800; color:var(--nav); }
+    .uc-nm   { font-size:9px; color:#334155; font-weight:600; text-align:center; line-height:1.2; margin-top:1px; }
     .uc-ctr  { text-align:center; min-width:76px; }
     .uc-sc   { font-size:20px; font-family:monospace; font-weight:900; color:var(--nav); background:rgba(255,255,255,.7); border:1.5px solid rgba(26,58,143,.18); border-radius:8px; padding:3px 8px; display:block; }
     .uc-lbl  { font-size:7px; color:var(--nav); font-family:monospace; letter-spacing:1px; margin-top:2px; display:block; }
@@ -1036,44 +1038,53 @@ function badgeHtml(acc) {
 }
 
 function matchResultCard(m, i) {
-  const resultText = m.accuracy==='exact' ? 'Predicción exacta ✓'
-    : m.accuracy==='partial' ? 'Ganador correcto, score diferente'
-    : 'Predicción incorrecta';
+  const isExact   = m.accuracy === 'exact';
+  const isPartial = m.accuracy === 'partial';
+  const isWrong   = m.accuracy === 'wrong';
+  const winnerFlag = m.actual_winner ? `${fl(m.actual_winner)} ${m.actual_winner}` : 'Empate';
+  const predCheck  = isExact ? '✓ Pred exacta' : isPartial ? `✓ Ganador correcto · score diferente` : `✗ Predicción incorrecta`;
+  const [a1,a2]   = (m.actual_score||'?-?').split('-');
+  const [p1,p2]   = (m.pred_score||'?-?').split('-');
   return `
     <div class="mr" style="animation-delay:${i*.04}s">
       <div class="mr-top">
         ${badgeHtml(m.accuracy)}
-        <span class="mr-meta">Grp ${m.group} · ${m.date} · ${m.time}</span>
+        <span class="mr-meta">Grp ${m.group} · ${m.date}</span>
       </div>
       <div class="mr-body">
         <div class="mr-row">
           <div class="mr-team">
             <span class="mr-fl">${fl(m.team1)}</span>
             <span class="mr-ab">${ab(m.team1)}</span>
+            <span class="mr-nm">${m.team1}</span>
           </div>
           <div class="mr-ctr">
-            <span class="mr-actual">${m.actual_score||"?"}</span>
-            <span class="mr-pred">Pred: ${m.pred_score}</span>
-            <span class="mr-sc-lbl">REAL · PREDICHO</span>
+            <span class="mr-actual">${a1}–${a2}</span>
+            <span class="mr-sc-lbl">RESULTADO</span>
+            <span class="mr-pred">Pred ${p1}–${p2}</span>
           </div>
           <div class="mr-team">
             <span class="mr-fl">${fl(m.team2)}</span>
             <span class="mr-ab">${ab(m.team2)}</span>
+            <span class="mr-nm">${m.team2}</span>
           </div>
         </div>
       </div>
       <div class="mr-foot">
-        <span class="mr-result-txt">${resultText}</span>
-        <span style="font-size:9px;color:var(--trt);font-family:monospace">${m.team1} ${m.pred_score} ${m.team2}</span>
+        <span class="mr-result-txt" style="color:${isExact?'#059669':isPartial?'#D97706':'#DC2626'}">${predCheck}</span>
+        ${m.actual_winner?`<span style="font-size:9px;color:var(--sec);font-family:monospace">${fl(m.actual_winner)} gana</span>`:''}
       </div>
     </div>`;
 }
 
 function upcomingCard(t1, s1, t2, s2, prob, grp, date, time, i, isNext) {
-  const pred = `${s1}–${s2}`;
-  const winner = s1>s2?t1:s2>s1?t2:null;
-  const p2 = 100 - prob;
-  const winnerStr = winner ? `${fl(winner)} ${ab(winner)} gana · ${s1>s2?prob:p2}%` : `Empate predicho`;
+  const pred   = `${s1}–${s2}`;
+  const winner = s1>s2 ? t1 : s2>s1 ? t2 : null;
+  const p2     = 100 - prob;
+  const winnerProb = s1>s2 ? prob : p2;
+  const predLine   = winner
+    ? `${fl(winner)} ${ab(winner)} gana · ${winnerProb}%`
+    : `Empate predicho`;
   return `
     <div class="uc" style="animation-delay:${i*.03}s">
       <div class="uc-top">
@@ -1084,7 +1095,7 @@ function upcomingCard(t1, s1, t2, s2, prob, grp, date, time, i, isNext) {
         <div class="uc-team">
           <span class="uc-fl">${fl(t1)}</span>
           <span class="uc-ab">${ab(t1)}</span>
-          <div class="uc-prob">${prob}%</div>
+          <span class="uc-nm">${t1}</span>
         </div>
         <div class="uc-ctr">
           <span class="uc-sc">${pred}</span>
@@ -1093,9 +1104,10 @@ function upcomingCard(t1, s1, t2, s2, prob, grp, date, time, i, isNext) {
         <div class="uc-team">
           <span class="uc-fl">${fl(t2)}</span>
           <span class="uc-ab">${ab(t2)}</span>
-          <div class="uc-prob">${p2}%</div>
+          <span class="uc-nm">${t2}</span>
         </div>
       </div>
+      <div style="padding:5px 12px 8px;text-align:center;font-size:10px;font-family:monospace;font-weight:700;color:var(--nav)">Pred: ${predLine}</div>
     </div>`;
 }
 
@@ -1135,10 +1147,10 @@ function renderPredichos(data) {
     </div>`;
   }
 
-  // ── Finished matches ──
+  // ── Finished matches (reverse chronological — most recent first) ──
   if (finished.length > 0) {
     html += `<div class="stitle">PARTIDOS JUGADOS</div>`;
-    finished.forEach((m, i) => { html += matchResultCard(m, i); });
+    [...finished].reverse().forEach((m, i) => { html += matchResultCard(m, i); });
   }
 
   // ── Next match ──
